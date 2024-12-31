@@ -13,6 +13,7 @@ public class testController {
 
     @GetMapping()
     public ApiResult<?> test() {
-        return ApiResult.onSuccess();
+        return ApiResult.onSuccess("test성공");
     }
+
 }

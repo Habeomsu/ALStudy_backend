@@ -36,7 +36,13 @@ public class ApiResult<T> {
         return new ApiResult<>(true,SuccessStatus._OK.getCode(),SuccessStatus._OK.getMessage(),result);
     }
 
+
     // 커스텀 상태 응답(status에 정의)
+    public static <T> ApiResult<T> onSuccess(BaseCode code){
+        return new ApiResult<>(true,code.getReasonHttpStatus().getCode(),code.getReasonHttpStatus().getMessage(),null);
+    }
+
+    // 커스텀 상태 응답(status에 정의) + 결과값
     public static <T> ApiResult<T> onSuccess(BaseCode code, T result){
         return new ApiResult<>(true,code.getReasonHttpStatus().getCode(),code.getReasonHttpStatus().getMessage(),result);
     }
@@ -51,6 +57,8 @@ public class ApiResult<T> {
     public static <T> ApiResult<T> onFailure(String code,String message,T data){
         return new ApiResult<>(false,code,message,data);
     }
+
+
 
     // http 상태 실패 응답
     public static <T> ApiResult<T> onFailure(BaseCode code,T result){

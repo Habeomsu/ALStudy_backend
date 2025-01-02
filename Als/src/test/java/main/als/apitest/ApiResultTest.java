@@ -1,16 +1,13 @@
-package main.als;
+package main.als.apitest;
 
 import main.als.apiPayload.ApiResult;
 import main.als.apiPayload.code.BaseCode;
 import main.als.apiPayload.code.status.SuccessStatus;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 // 왜 spinrgtest가 없을까? --> apiresult는 단일 클래스여서 다른 클래스를 사용할 필요가 없다.

@@ -1,5 +1,6 @@
-package main.als;
+package main.als.apitest;
 
+import main.als.testController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -74,6 +76,14 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     public ApiResult<?> noSuchElementException(Exception e, Model model) {
         return ApiResult.onFailure(ErrorStatus._BAD_REQUEST.getCode(), e.getMessage(), null);
     }
+
+    //사용자 이름 없을때 예외
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiResult<?> usernameNotFoundException(Exception e, WebRequest request){
+        return ApiResult.onFailure(ErrorStatus._NOT_FOUND.getCode(), e.getMessage(), null);
+    }
+
 
 
     //사용자 정의 예외처리 메소드

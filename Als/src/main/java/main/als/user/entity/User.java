@@ -2,6 +2,10 @@ package main.als.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import main.als.group.entity.UserGroup;
+import main.als.problem.entity.Submission;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +18,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -25,5 +29,11 @@ public class User {
     @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserGroup> userGroups; // 그룹과의 관계
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Submission> submissions; // 자신이 푼 문제 목록
 
 }

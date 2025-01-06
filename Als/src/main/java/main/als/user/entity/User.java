@@ -1,6 +1,7 @@
 package main.als.user.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import main.als.group.entity.UserGroup;
 import main.als.problem.entity.Submission;
@@ -21,9 +22,11 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotNull(message = "User must not be null")
     private String username;
 
     @Column(nullable = false)
+    @NotNull(message = "password must not be null")
     private String password;
 
     @Enumerated(EnumType.STRING) // Enum 값을 문자열로 저장

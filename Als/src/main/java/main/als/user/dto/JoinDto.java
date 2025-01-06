@@ -1,6 +1,6 @@
 package main.als.user.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class JoinDto {
 
-    @NotNull
+    @NotBlank(message = "Username must not be blank")
     private String username;
-    @NotNull
+
+    @NotBlank(message = "Password must not be blank")
     private String password;
 
 }

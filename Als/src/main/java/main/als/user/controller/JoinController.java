@@ -1,5 +1,6 @@
 package main.als.user.controller;
 
+import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
 import main.als.user.dto.JoinDto;
 import main.als.user.service.JoinService;
@@ -17,7 +18,7 @@ public class JoinController {
     }
 
     @PostMapping("/join")
-    public ApiResult<Void> join(JoinDto joinDto) {
+    public ApiResult<Void> join(@Valid JoinDto joinDto) {
         joinService.joinProcess(joinDto);
         return ApiResult.onSuccess();
 

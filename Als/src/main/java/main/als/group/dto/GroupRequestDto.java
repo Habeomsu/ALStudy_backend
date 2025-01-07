@@ -39,6 +39,22 @@ public class GroupRequestDto {
 
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class ValidPasswordDto{
+
+        @NotNull(message = "그룹 번호는 필수입니다.")
+        private long id;
+
+        @NotBlank(message = "그룹 비밀번호는 필수입니다.")
+        private String password;
+    }
+
+
+
+
+
 
 
 

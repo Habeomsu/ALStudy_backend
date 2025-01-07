@@ -29,7 +29,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"USER400_2","회원가입된 아이디가 아닙니다."),
 
     //group
-    _NOT_OVER_DEADLINE(HttpStatus.BAD_REQUEST,"GROUP400_1","스터디 종료일은 마감일보다 이후여야 합니다.")
+    _NOT_OVER_DEADLINE(HttpStatus.BAD_REQUEST,"GROUP400_1","스터디 종료일은 마감일보다 이후여야 합니다."),
+    _NOT_FOUND_GROUP(HttpStatus.NOT_FOUND,"GROUP400_2","그룹이 존재하지 않습니다."),
+    _NOT_MATCH_GROUPPASSWORD(HttpStatus.BAD_REQUEST,"GROUP400_3","그룹 비밀번호가 일치하지 않습니다."),
+    _NOT_MATCH_LEADER(HttpStatus.BAD_REQUEST,"GROUP400_4","리더가 일치하지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;

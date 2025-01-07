@@ -31,6 +31,7 @@ public class GroupProblem {
     private LocalDateTime createdAt; // 선택 시간
     private LocalDateTime deadline; // 문제 제출 마감 시간
 
+
     @OneToMany(mappedBy = "groupProblem", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Submission> submissions = new ArrayList<>(); // 이 문제에 대한 제출 목록

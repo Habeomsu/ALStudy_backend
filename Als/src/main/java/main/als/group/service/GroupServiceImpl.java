@@ -12,13 +12,14 @@ import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,11 +28,13 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository, UserGroupRepository userGroupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository, UserGroupRepository userGroupRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class GroupServiceImpl implements GroupService {
         }
         Group group = Group.builder()
                 .name(groupRequestDto.getGroupname())
-                .password(groupRequestDto.getPassword())
+                .password(bCryptPasswordEncoder.encode(groupRequestDto.getPassword()))
                 .leader(leader.getUsername())
                 .depositAmount(groupRequestDto.getDepositAmount())
                 .createdAt(LocalDateTime.now())
@@ -70,6 +73,35 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupResponseDto.AllGroupDto> getAllGroups() {
         List<Group> groups = groupRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return GroupConverter.toAllGroupDto(groups);
+    }
+
+    @Override
+    public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto) {
+        String password = validPasswordDto.getPassword();
+        Group group = groupRepository.findById(validPasswordDto.getId())
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_GROUP));
+        if (!bCryptPasswordEncoder.matches(password, group.getPassword())) {
+            throw new GeneralException(ErrorStatus._NOT_MATCH_GROUPPASSWORD);
+        }
+        return true;
+    }
+
+    @Override
+    public void deleteGroup(Long id, String username, String password) {
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_GROUP));
+
+        // 리더 검증
+        if (!group.getLeader().equals(username)) {
+            throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
+        }
+
+        // 비밀번호 검증
+        if (!bCryptPasswordEncoder.matches(password, group.getPassword())) {
+            throw new GeneralException(ErrorStatus._NOT_MATCH_GROUPPASSWORD);
+        }
+
+        groupRepository.deleteById(id);
     }
 
     @Override

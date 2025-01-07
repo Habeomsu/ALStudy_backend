@@ -59,11 +59,11 @@ public class ApiResult<T> {
     }
 
 
-
     // http 상태 실패 응답
     public static <T> ApiResult<T> onFailure(BaseCode code,T result){
         return new ApiResult<>(false,code.getReasonHttpStatus().getCode(),code.getReasonHttpStatus().getMessage(),result);
     }
+
 
 
 

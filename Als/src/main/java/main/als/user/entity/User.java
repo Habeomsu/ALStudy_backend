@@ -6,6 +6,7 @@ import lombok.*;
 import main.als.group.entity.UserGroup;
 import main.als.problem.entity.Submission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,9 +35,11 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserGroup> userGroups; // 그룹과의 관계
+    @Builder.Default //builder사용시 null값 초기화 방지
+    private List<UserGroup> userGroups = new ArrayList<>(); // 그룹과의 관계
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Submission> submissions; // 자신이 푼 문제 목록
+    @Builder.Default
+    private List<Submission> submissions = new ArrayList<>(); // 자신이 푼 문제 목록
 
 }

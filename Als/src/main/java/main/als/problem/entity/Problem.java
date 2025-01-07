@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,5 +27,6 @@ public class Problem{
     private LocalDateTime createdAt; // 생성 시간
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
-    private List<TestCase> testCases;
+    @Builder.Default
+    private List<TestCase> testCases = new ArrayList<>();
 }

@@ -5,6 +5,7 @@ import main.als.apiPayload.ApiResult;
 import main.als.user.dto.JoinDto;
 import main.als.user.service.JoinService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ public class JoinController {
     }
 
     @PostMapping("/join")
-    public ApiResult<Void> join(@Valid JoinDto joinDto) {
+    public ApiResult<Void> join(@Valid @RequestBody JoinDto joinDto) {
         joinService.joinProcess(joinDto);
         return ApiResult.onSuccess();
 

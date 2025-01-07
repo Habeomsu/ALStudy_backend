@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import main.als.group.entity.Group;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,5 +32,6 @@ public class GroupProblem {
     private LocalDateTime deadline; // 문제 제출 마감 시간
 
     @OneToMany(mappedBy = "groupProblem", cascade = CascadeType.ALL)
-    private List<Submission> submissions; // 이 문제에 대한 제출 목록
+    @Builder.Default
+    private List<Submission> submissions = new ArrayList<>(); // 이 문제에 대한 제출 목록
 }

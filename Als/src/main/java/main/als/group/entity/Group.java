@@ -8,6 +8,7 @@ import main.als.user.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,9 +29,8 @@ public class Group {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "leader_id")
-    private User leader;
+    @Column(nullable = false)
+    private String leader;
 
     @Column(name = "deposit_amount", precision = 10, scale = 2)
     private BigDecimal depositAmount;
@@ -43,8 +43,10 @@ public class Group {
     private LocalDateTime studyEndDate; // 스터디 종료일
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<UserGroup> userGroups;
+    @Builder.Default
+    private List<UserGroup> userGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<GroupProblem> groupProblems;
+    @Builder.Default
+    private List<GroupProblem> groupProblems = new ArrayList<>();
 }

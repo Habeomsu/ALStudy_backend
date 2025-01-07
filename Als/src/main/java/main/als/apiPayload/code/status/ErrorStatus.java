@@ -23,9 +23,13 @@ public enum ErrorStatus implements BaseErrorCode {
     _EXFIRED_REFRESH_TOKEN(HttpStatus.BAD_REQUEST,"JWT400_4","만료된 refresh 토큰입니다."),
     _INVALID_REFRESH_TOKEN(HttpStatus.NOT_FOUND,"JWT400_5","유효하지 않는 refresh 토큰입니다."),
     _NOFOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND,"JWT400_6","DB에 refresh 토큰이 존재하지 않습니다."),
+
     //username
     _EXIST_USERNAME(HttpStatus.BAD_REQUEST,"USER400_1","아이디가 존재합니다."),
-    _USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"USER400_2","회원가입된 아이디가 아닙니다.")
+    _USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"USER400_2","회원가입된 아이디가 아닙니다."),
+
+    //group
+    _NOT_OVER_DEADLINE(HttpStatus.BAD_REQUEST,"GROUP400_1","스터디 종료일은 마감일보다 이후여야 합니다.")
     ;
 
     private final HttpStatus httpStatus;

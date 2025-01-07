@@ -42,6 +42,11 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
+        if (requestURI.equals("/join")){
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         if(accessToken == null) {
 

@@ -22,7 +22,6 @@ public class DeleteController {
         String username = userDetails.getUsername(); // JWT에서 사용자 ID 가져오기
         deleteService.deleteUser(username);
 
-
         // 쿠키 무효화
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0); // 쿠키 만료 시간 설정

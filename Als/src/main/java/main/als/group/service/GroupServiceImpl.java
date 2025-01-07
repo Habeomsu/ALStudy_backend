@@ -36,9 +36,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public Group createGroup(GroupRequestDto.CreateGroupDto groupRequestDto){
+    public Group createGroup(GroupRequestDto.CreateGroupDto groupRequestDto,String username){
 
-        User leader = userRepository.findByUsername(groupRequestDto.getUsername());
+        User leader = userRepository.findByUsername(username);
         if (leader == null) {
             throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
         }

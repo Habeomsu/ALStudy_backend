@@ -6,6 +6,8 @@ import main.als.group.dto.GroupRequestDto;
 import main.als.group.dto.GroupResponseDto;
 import main.als.group.entity.Group;
 import main.als.group.service.GroupService;
+import main.als.user.dto.CustomUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class GroupController {
     }
 
     @PostMapping
-    public ApiResult<?> create(@Valid @RequestBody GroupRequestDto.CreateGroupDto groupRequestDto) {
-        Group group = groupService.createGroup(groupRequestDto);
+    public ApiResult<?> create(@Valid @RequestBody GroupRequestDto.CreateGroupDto groupRequestDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Group group = groupService.createGroup(groupRequestDto,username);
         return ApiResult.onSuccess();
     }
 

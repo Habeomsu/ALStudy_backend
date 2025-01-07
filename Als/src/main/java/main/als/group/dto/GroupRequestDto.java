@@ -26,9 +26,6 @@ public class GroupRequestDto {
         @NotBlank(message = "그룹 비밀번호는 필수입니다.")
         private String password;
 
-        @NotBlank(message = "리더 이름은 필수입니다.")
-        private String username;
-
         @DecimalMin(value = "10000", message = "예치금은 10,000원 이상이어야 합니다.")
         private BigDecimal depositAmount;
 

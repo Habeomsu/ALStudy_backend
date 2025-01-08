@@ -24,6 +24,9 @@ public class Problem{
     private String description; // 문제 설명
     private String difficultyLevel;
 
+    private String inputDescription;
+    private String outputDescription;
+
     @Enumerated(EnumType.STRING)
     private ProblemType problemType; // 문제 유형
 
@@ -32,4 +35,9 @@ public class Problem{
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
     @Builder.Default
     private List<TestCase> testCases = new ArrayList<>();
+
+    private String exampleInput;
+
+    private String exampleOutput;
+
 }

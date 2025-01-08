@@ -36,7 +36,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //usergroup
     _DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,"USERGROUP400_1","모집기간이 지났습니다."),
-    _USER_ALREADY_IN_GROUP(HttpStatus.BAD_REQUEST,"USERGROUP400_2","이미 그룹에 포함된 사용자입니다.")
+    _USER_ALREADY_IN_GROUP(HttpStatus.BAD_REQUEST,"USERGROUP400_2","이미 그룹에 포함된 사용자입니다."),
+
+    // problem
+    _NOT_CREATED_PROBLEM(HttpStatus.BAD_REQUEST,"PROBLEM400_1","문제 생성에 실패하였습니다.")
+
     ;
 
     private final HttpStatus httpStatus;

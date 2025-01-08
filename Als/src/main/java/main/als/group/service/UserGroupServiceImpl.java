@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserGroupServiceImpl implements UserGroupService {
@@ -66,5 +68,19 @@ public class UserGroupServiceImpl implements UserGroupService {
         group.getUserGroups().add(userGroup);
         userGroupRepository.save(userGroup);
 
+    }
+
+    @Override
+    public List<User> getUsersByGroupId(Long groupId) {
+
+        List<UserGroup> userGroups = userGroupRepository.findByGroupId(groupId);
+
+        if (userGroups == null || userGroups.isEmpty()) {
+            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 그룹이 존재하지 않을 때 예외 발생
+        }
+
+        return userGroups.stream()
+                .map(UserGroup::getUser)
+                .collect(Collectors.toList());
     }
 }

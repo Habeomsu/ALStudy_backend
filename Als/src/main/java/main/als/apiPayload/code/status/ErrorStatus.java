@@ -32,7 +32,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _NOT_OVER_DEADLINE(HttpStatus.BAD_REQUEST,"GROUP400_1","스터디 종료일은 마감일보다 이후여야 합니다."),
     _NOT_FOUND_GROUP(HttpStatus.NOT_FOUND,"GROUP400_2","그룹이 존재하지 않습니다."),
     _NOT_MATCH_GROUPPASSWORD(HttpStatus.BAD_REQUEST,"GROUP400_3","그룹 비밀번호가 일치하지 않습니다."),
-    _NOT_MATCH_LEADER(HttpStatus.BAD_REQUEST,"GROUP400_4","리더가 일치하지 않습니다.")
+    _NOT_MATCH_LEADER(HttpStatus.BAD_REQUEST,"GROUP400_4","리더가 일치하지 않습니다."),
+
+    //usergroup
+    _DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,"USERGROUP400_1","모집기간이 지났습니다."),
+    _USER_ALREADY_IN_GROUP(HttpStatus.BAD_REQUEST,"USERGROUP400_2","이미 그룹에 포함된 사용자입니다.")
     ;
 
     private final HttpStatus httpStatus;

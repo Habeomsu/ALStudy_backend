@@ -11,6 +11,8 @@ import main.als.user.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserGroupServiceImpl implements UserGroupService {
 
@@ -40,6 +42,19 @@ public class UserGroupServiceImpl implements UserGroupService {
         if (!bCryptPasswordEncoder.matches(password, group.getPassword())) {
             throw new GeneralException(ErrorStatus._NOT_MATCH_GROUPPASSWORD);
         }
+
+        // Deadline 확인
+        if (group.getDeadline() != null && group.getDeadline().isBefore(LocalDateTime.now())) {
+            throw new GeneralException(ErrorStatus._DEADLINE_EXCEEDED); // Deadline 초과 예외 처리
+        }
+
+        // 사용자 그룹에 이미 존재하는지 확인
+        boolean userInGroup = user.getUserGroups().stream()
+                .anyMatch(userGroup -> userGroup.getGroup().getId().equals(groupId));
+        if (userInGroup) {
+            throw new GeneralException(ErrorStatus._USER_ALREADY_IN_GROUP); // 이미 그룹에 존재하는 경우
+        }
+
 
         UserGroup userGroup = UserGroup.builder()
                 .user(user)

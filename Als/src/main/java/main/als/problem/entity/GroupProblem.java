@@ -3,6 +3,8 @@ package main.als.problem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import main.als.group.entity.Group;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,4 +37,6 @@ public class GroupProblem {
     @OneToMany(mappedBy = "groupProblem", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Submission> submissions = new ArrayList<>(); // 이 문제에 대한 제출 목록
+
+    private BigDecimal deductionAmount; // 차감 금액
 }

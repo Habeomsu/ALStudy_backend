@@ -24,6 +24,9 @@ public class Problem{
     private String description; // 문제 설명
     private String difficultyLevel;
 
+    @Enumerated(EnumType.STRING)
+    private ProblemType problemType; // 문제 유형
+
     private LocalDateTime createdAt; // 생성 시간
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)

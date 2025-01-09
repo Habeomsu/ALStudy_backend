@@ -10,7 +10,6 @@ import main.als.problem.entity.ProblemType;
 
 public class ProblemRequestDto {
 
-
     @Getter
     @Builder
     @AllArgsConstructor

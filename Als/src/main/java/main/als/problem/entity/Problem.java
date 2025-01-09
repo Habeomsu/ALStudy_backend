@@ -21,23 +21,24 @@ public class Problem{
     private Long id;
 
     private String title; // 문제 제목
-    private String description; // 문제 설명
     private String difficultyLevel;
-
-    private String inputDescription;
-    private String outputDescription;
 
     @Enumerated(EnumType.STRING)
     private ProblemType problemType; // 문제 유형
 
     private LocalDateTime createdAt; // 생성 시간
 
+    private String description; // 문제 설명
+    private String inputDescription;
+    private String outputDescription;
+    private String exampleInput;
+    private String exampleOutput;
+
+
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
     @Builder.Default
     private List<TestCase> testCases = new ArrayList<>();
 
-    private String exampleInput;
 
-    private String exampleOutput;
 
 }

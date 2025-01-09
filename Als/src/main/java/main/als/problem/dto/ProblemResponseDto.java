@@ -18,12 +18,12 @@ public class ProblemResponseDto {
 
         private Long id;
         private String title;
-        private String description;
         private String difficultyLevel;
-        private String inputDescription;
-        private String outputDescription;
         private ProblemType problemType;
         private LocalDateTime createdAt;
+        private String description;
+        private String inputDescription;
+        private String outputDescription;
         private String exampleInput;
         private String exampleOutput;
 

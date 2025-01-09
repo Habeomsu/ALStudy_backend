@@ -10,6 +10,7 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   jwt:
-    secret: 
+    secret:
+
 server:
   port: 8080

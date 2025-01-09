@@ -24,6 +24,11 @@ public class ProblemController {
         return ApiResult.onSuccess(problemService.getAllProblems());
     }
 
+    @GetMapping("/{problemId}")
+    public ApiResult<ProblemResponseDto.ProblemDto> problemById(@PathVariable Long problemId){
+        return ApiResult.onSuccess(problemService.getProblemById(problemId));
+    }
+
 
     @PostMapping
     public ApiResult<?> createProblem(@Valid @RequestBody ProblemRequestDto.createProblemDto createProblemDto) {

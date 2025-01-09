@@ -51,4 +51,11 @@ public class ProblemServiceImpl implements ProblemService {
         return ProblemConverter.toAllProblemDto(problems);
     }
 
+    @Override
+    public ProblemResponseDto.ProblemDto getProblemById(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_PROBLEM));
+        return ProblemConverter.toProblemDto(problem);
+    }
+
 }

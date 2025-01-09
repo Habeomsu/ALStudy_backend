@@ -37,6 +37,7 @@ public class UserGroupController {
     }
 
 
+
     @PostMapping("/{groupId}")
     public ApiResult<?> joinUserGroup(@PathVariable("groupId") Long groupId,
                                       @AuthenticationPrincipal CustomUserDetails userDetails,

@@ -40,7 +40,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // problem
     _NOT_CREATED_PROBLEM(HttpStatus.BAD_REQUEST,"PROBLEM400_1","문제 생성에 실패하였습니다."),
-    _NOT_FOUND_PROBLEM(HttpStatus.NOT_FOUND,"PROBLEM400_2","문제를 찾지 못했습니다.")
+    _NOT_FOUND_PROBLEM(HttpStatus.NOT_FOUND,"PROBLEM400_2","문제를 찾지 못했습니다."),
+
+    //testcase
+    _NOT_FOUND_TESTCASE(HttpStatus.NOT_FOUND,"TESTCASE400_1","테스트케이스가 존재하지 않습니다.")
 
     ;
 

@@ -36,4 +36,10 @@ public class ProblemController {
         return ApiResult.onSuccess();
     }
 
+    @DeleteMapping("/{problemId}")
+    public ApiResult<Void> deleteProblem(@PathVariable Long problemId) {
+        problemService.deleteProblem(problemId);
+        return ApiResult.onSuccess();
+    }
+
 }

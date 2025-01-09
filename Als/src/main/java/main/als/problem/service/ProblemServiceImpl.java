@@ -58,4 +58,12 @@ public class ProblemServiceImpl implements ProblemService {
         return ProblemConverter.toProblemDto(problem);
     }
 
+    @Override
+    public void deleteProblem(Long id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_PROBLEM));
+        problemRepository.deleteById(id);
+    }
+
+
 }

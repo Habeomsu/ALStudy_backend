@@ -10,5 +10,6 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     List<Problem> findAll();
     Optional<Problem> findById(Long id);
+    void deleteById(Long id);
 
 }

@@ -6,11 +6,14 @@ import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.problem.converter.ProblemConverter;
 import main.als.problem.dto.ProblemRequestDto;
+import main.als.problem.dto.ProblemResponseDto;
 import main.als.problem.entity.Problem;
 import main.als.problem.entity.TestCase;
 import main.als.problem.repository.ProblemRepository;
 import main.als.problem.repository.TestCaseRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProblemServiceImpl implements ProblemService {
@@ -39,4 +42,13 @@ public class ProblemServiceImpl implements ProblemService {
             throw new GeneralException(ErrorStatus._NOT_CREATED_PROBLEM);
         }
     }
+
+    @Override
+    public List<ProblemResponseDto.AllProblemDto> getAllProblems() {
+
+        List<Problem> problems = problemRepository.findAll();
+
+        return ProblemConverter.toAllProblemDto(problems);
+    }
+
 }

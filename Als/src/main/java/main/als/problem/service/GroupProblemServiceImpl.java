@@ -5,7 +5,9 @@ import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.group.entity.Group;
 import main.als.group.repository.GroupRepository;
+import main.als.problem.converter.GroupProblemConverter;
 import main.als.problem.dto.GroupProblemRequestDto;
+import main.als.problem.dto.GroupProblemResponseDto;
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.Problem;
 import main.als.problem.repository.GroupProblemRepository;
@@ -13,6 +15,7 @@ import main.als.problem.repository.ProblemRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class GroupProblemServiceImpl implements GroupProblemService {
@@ -57,4 +60,16 @@ public class GroupProblemServiceImpl implements GroupProblemService {
         groupProblemRepository.save(groupProblem);
 
     }
+
+    @Override
+    public List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId) {
+
+        if (!groupRepository.existsById(groupId)) {
+            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 적절한 예외 메시지
+        }
+
+        List<GroupProblem> groupProblems = groupProblemRepository.findByGroupId(groupId);
+        return GroupProblemConverter.toGroupProblemDto(groupProblems);
+    }
+
 }

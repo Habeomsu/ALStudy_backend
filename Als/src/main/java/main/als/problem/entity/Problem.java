@@ -28,8 +28,11 @@ public class Problem{
 
     private LocalDateTime createdAt; // 생성 시간
 
+    @Column(length = 1000)
     private String description; // 문제 설명
+    @Column(length = 1000)
     private String inputDescription;
+    @Column(length = 1000)
     private String outputDescription;
     private String exampleInput;
     private String exampleOutput;

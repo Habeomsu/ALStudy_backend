@@ -50,9 +50,9 @@ public class GroupProblemServiceImpl implements GroupProblemService {
             throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
         }
 
-        if(group.getDeadline().isAfter(LocalDateTime.now())) {
-            throw new GeneralException(ErrorStatus._DEADLINE_NOT_PASSED);
-        }
+//        if(group.getDeadline().isAfter(LocalDateTime.now())) {
+//            throw new GeneralException(ErrorStatus._DEADLINE_NOT_PASSED);
+//        }
 
         GroupProblem groupProblem = GroupProblem.builder()
                 .problem(problem)

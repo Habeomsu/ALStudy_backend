@@ -14,7 +14,7 @@ public class GroupProblemConverter {
                 .groupProblemId(groupProblem.getId())
                 .title(groupProblem.getProblem().getTitle())
                 .difficultyLevel(groupProblem.getProblem().getDifficultyLevel())
-                .createdAt(groupProblem.getProblem().getCreatedAt())
+                .createdAt(groupProblem.getCreatedAt())
                 .deadline(groupProblem.getDeadline())
                 .deductionAmount(groupProblem.getDeductionAmount())
                 .build();

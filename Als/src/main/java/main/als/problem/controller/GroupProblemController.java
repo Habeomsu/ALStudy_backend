@@ -1,5 +1,6 @@
 package main.als.problem.controller;
 
+import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
 import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
@@ -35,7 +36,7 @@ public class GroupProblemController {
 
 
     @PostMapping
-    public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody GroupProblemRequestDto.GroupProblemDto groupProblemDto) {
+    public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody @Valid GroupProblemRequestDto.GroupProblemDto groupProblemDto) {
 
         String username = customUserDetails.getUsername();
         groupProblemService.createGroupProblem(groupProblemDto, username);

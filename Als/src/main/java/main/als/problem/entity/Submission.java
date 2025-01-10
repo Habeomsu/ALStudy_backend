@@ -30,7 +30,10 @@ public class Submission {
 
     private String language;
     private String code;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private SubmissionStatus status;
+
     private LocalDateTime submissionTime;
 
 }

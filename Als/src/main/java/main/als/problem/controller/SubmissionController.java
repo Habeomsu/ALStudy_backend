@@ -10,6 +10,7 @@ import main.als.user.dto.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/submission")
@@ -21,13 +22,14 @@ public class SubmissionController {
         this.submissionService = submissionService;
     }
 
-    @PostMapping("/{groupProblemId}")
+    @PostMapping(value = "/{groupProblemId}",consumes = "multipart/form-data")
     public ApiResult<?> submit(@AuthenticationPrincipal CustomUserDetails UserDetails,
-                               @RequestBody @Valid SubmissionRequestDto.SubmissionDto submissionDto,
+                               @RequestPart(value = "language" ) String language ,
+                               @RequestPart(value = "file") MultipartFile file,
                                @PathVariable Long groupProblemId) {
 
         String username = UserDetails.getUsername();
-        submissionService.submit(submissionDto, groupProblemId, username);
+        submissionService.submit(file,language, groupProblemId, username);
         return ApiResult.onSuccess();
 
     }

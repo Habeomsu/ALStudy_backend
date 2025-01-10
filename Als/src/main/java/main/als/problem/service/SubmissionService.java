@@ -1,8 +1,9 @@
 package main.als.problem.service;
 
 import main.als.problem.dto.SubmissionRequestDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface SubmissionService {
 
-    void submit(SubmissionRequestDto.SubmissionDto submissionDto,Long groupProblemId,String username);
+    void submit(MultipartFile file,String language, Long groupProblemId, String username);
 }

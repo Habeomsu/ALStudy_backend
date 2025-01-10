@@ -9,5 +9,6 @@ import java.util.List;
 public interface UserGroupRepository extends JpaRepository<UserGroup,Long> {
 
     List<UserGroup> findByGroupId(Long groupId);
+    boolean existsByGroupIdAndUserUsername(Long groupId, String username);
 }
 

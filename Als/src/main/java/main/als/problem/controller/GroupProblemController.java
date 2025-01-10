@@ -26,6 +26,13 @@ public class GroupProblemController {
         return ApiResult.onSuccess(groupProblemService.getGroupProblems(groupId));
     }
 
+    @GetMapping("/detail/{groupProblemId}")
+    public ApiResult<GroupProblemResponseDto.DetailGroupProblem> getDetailGroupProblem(@PathVariable Long groupProblemId,
+                                                                                       @AuthenticationPrincipal CustomUserDetails UserDetails) {
+        String username =UserDetails.getUsername();
+        return ApiResult.onSuccess(groupProblemService.getDetailGroupProblem(groupProblemId,username));
+    }
+
 
     @PostMapping
     public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody GroupProblemRequestDto.GroupProblemDto groupProblemDto) {

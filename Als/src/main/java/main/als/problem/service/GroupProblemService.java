@@ -8,4 +8,5 @@ import java.util.List;
 public interface GroupProblemService {
     void createGroupProblem(GroupProblemRequestDto.GroupProblemDto groupProblemDto,String username);
     List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId);
+    GroupProblemResponseDto.DetailGroupProblem getDetailGroupProblem(Long groupProblemId,String username);
 }

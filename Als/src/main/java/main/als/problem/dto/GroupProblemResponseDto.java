@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import main.als.problem.entity.ProblemType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -41,6 +42,23 @@ public class GroupProblemResponseDto {
     }
 
 
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DetailGroupProblem{
+        private Long groupProblemId;
+        private Long problemId;
+        private String title;
+        private String difficultyLevel;
+        private ProblemType problemType;
+        private String description;
+        private String inputDescription;
+        private String outputDescription;
+        private String exampleInput;
+        private String exampleOutput;
+        private BigDecimal deductionAmount;
+    }
 
 
 }

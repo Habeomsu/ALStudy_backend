@@ -4,10 +4,10 @@ import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
 import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
-import main.als.problem.entity.GroupProblem;
 import main.als.problem.service.GroupProblemService;
 import main.als.user.dto.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,11 +29,12 @@ public class GroupProblemController {
         return ApiResult.onSuccess(groupProblemService.getGroupProblems(groupId,username));
     }
 
-    @GetMapping("/detail/{groupProblemId}")
-    public ApiResult<GroupProblemResponseDto.DetailGroupProblem> getDetailGroupProblem(@PathVariable Long groupProblemId,
+    @GetMapping("/{groupId}/{groupProblemId}")
+    public ApiResult<GroupProblemResponseDto.DetailGroupProblem> getDetailGroupProblem(@PathVariable Long groupId,
+                                                                                       @PathVariable Long groupProblemId,
                                                                                        @AuthenticationPrincipal CustomUserDetails UserDetails) {
         String username =UserDetails.getUsername();
-        return ApiResult.onSuccess(groupProblemService.getDetailGroupProblem(groupProblemId,username));
+        return ApiResult.onSuccess(groupProblemService.getDetailGroupProblem(groupId,groupProblemId,username));
     }
 
 

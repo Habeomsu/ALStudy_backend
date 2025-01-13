@@ -126,11 +126,16 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     }
 
     @Override
-    public GroupProblemResponseDto.DetailGroupProblem getDetailGroupProblem(Long groupProblemId,String username) {
+    public GroupProblemResponseDto.DetailGroupProblem getDetailGroupProblem(Long groupId,Long groupProblemId,String username) {
         GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
                 .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
 
         Group group = groupProblem.getGroup();
+
+        // URL에서 받은 groupId와 실제 그룹 ID가 일치하는지 확인
+        if (!group.getId().equals(groupId)) {
+            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 잘못된 그룹 ID 예외 처리
+        }
 
         boolean isMember = userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username);
 

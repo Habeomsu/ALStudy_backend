@@ -37,6 +37,7 @@ public class GroupProblemResponseDto {
         private LocalDateTime createdAt;
         private LocalDateTime deadline;
         private BigDecimal deductionAmount;
+        private SubmissionStatus status;
     }
 
 

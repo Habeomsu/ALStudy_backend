@@ -83,7 +83,7 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     }
 
     @Override
-    public List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId) {
+    public List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId,String username) {
 
         if (!groupRepository.existsById(groupId)) {
             throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP);
@@ -91,10 +91,31 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
         List<GroupProblem> groupProblems = groupProblemRepository.findByGroupId(groupId);
 
-//        List<Submission> userSubmissions = submissionRepository.findByUserUsername(username);
-//
+        List<Submission> userSubmissions = submissionRepository.findByUserUsername(username);
 
-        return GroupProblemConverter.toGroupProblemDto(groupProblems);
+        // submission 을 사용자별로 가지고온다음 그룹 아이디 : [상태들] -> 그룹 아이디 : 상태로 만듬
+        Map<Long, SubmissionStatus> submissionStatusMap = userSubmissions.stream()
+                .collect(Collectors.groupingBy(
+                        submission -> submission.getGroupProblem().getId(),
+                        Collectors.mapping(Submission::getStatus, Collectors.toList())
+                ))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            List<SubmissionStatus> statuses = entry.getValue(); // entry의 값을 가져옴
+
+                            if (statuses.contains(SubmissionStatus.SUCCEEDED)) {
+                                return SubmissionStatus.SUCCEEDED; // 성공이 있으면 성공으로 설정
+                            } else if (statuses.contains(SubmissionStatus.FAILED)) {
+                                return SubmissionStatus.FAILED; // 실패가 있으면 실패로 설정
+                            } else {
+                                return SubmissionStatus.PENDING; // 제출이 없거나 모두 대기 상태면 대기
+                            }
+                        }
+                ));
+
+        return GroupProblemConverter.toGroupProblemDto(groupProblems, submissionStatusMap);
     }
 
     @Override

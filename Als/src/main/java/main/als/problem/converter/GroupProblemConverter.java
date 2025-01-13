@@ -6,11 +6,12 @@ import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.SubmissionStatus;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GroupProblemConverter {
 
-    public static GroupProblemResponseDto.AllGroupProblem toGroupProblemDto (GroupProblem groupProblem) {
+    public static GroupProblemResponseDto.AllGroupProblem toGroupProblemDto (GroupProblem groupProblem,SubmissionStatus status) {
         return GroupProblemResponseDto.AllGroupProblem.builder()
                 .groupProblemId(groupProblem.getId())
                 .title(groupProblem.getProblem().getTitle())
@@ -18,14 +19,18 @@ public class GroupProblemConverter {
                 .createdAt(groupProblem.getCreatedAt())
                 .deadline(groupProblem.getDeadline())
                 .deductionAmount(groupProblem.getDeductionAmount())
+                .status(status)
                 .build();
 
     }
 
-    public static List<GroupProblemResponseDto.AllGroupProblem> toGroupProblemDto (List<GroupProblem> groupProblems) {
-        return groupProblems
-                .stream()
-                .map(GroupProblemConverter::toGroupProblemDto)
+    public static List<GroupProblemResponseDto.AllGroupProblem> toGroupProblemDto (List<GroupProblem> groupProblems, Map<Long, SubmissionStatus> submissionStatusMap) {
+        return groupProblems.stream()
+                .map(groupProblem -> {
+                    // 해당 그룹 문제 ID에 대한 제출 상태를 가져옵니다.
+                    SubmissionStatus status = submissionStatusMap.getOrDefault(groupProblem.getId(), SubmissionStatus.PENDING);
+                    return toGroupProblemDto(groupProblem, status);
+                })
                 .collect(Collectors.toList());
     }
 

@@ -86,7 +86,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .user(user)
                 .language(language)
                 .code(codeUrl)
-                .status(SubmissionStatus.PENDING)
+                .status(SubmissionStatus.FAILED)
                 .submissionTime(LocalDateTime.now())
                 .build();
 

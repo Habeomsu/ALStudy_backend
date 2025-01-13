@@ -8,6 +8,7 @@ import java.util.List;
 public class SubmissionStatusDeterminer {
 
     public static SubmissionStatus determineFinalSubmissionStatus(List<Submission> submissions) {
+
         boolean hasSucceeded = false;
         boolean hasFailed = false;
 

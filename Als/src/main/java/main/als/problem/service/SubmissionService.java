@@ -12,5 +12,7 @@ public interface SubmissionService {
 
     List<SubmissionResponseDto.AllSubmissionDto> getAll(Long groupId, String username);
 
+    SubmissionResponseDto.SubmissionDto getSubmission(Long groupId,Long submissionId,String username);
+
 
 }

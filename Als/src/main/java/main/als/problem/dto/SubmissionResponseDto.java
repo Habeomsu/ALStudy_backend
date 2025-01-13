@@ -22,6 +22,8 @@ public class SubmissionResponseDto {
 
         private Long groupProblemId;
 
+        private String title;
+
         private String username;
 
         private String language;

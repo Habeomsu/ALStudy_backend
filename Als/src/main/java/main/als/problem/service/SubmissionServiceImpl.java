@@ -24,19 +24,17 @@ import java.util.UUID;
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
 
-    private final SubmissionRepository repository;
     private final UserRepository userRepository;
     private final GroupProblemRepository groupProblemRepository;
     private final SubmissionRepository submissionRepository;
     private final UserGroupRepository userGroupRepository;
     private final AmazonS3Manager amazonS3Manager;
 
-    public SubmissionServiceImpl(SubmissionRepository repository, UserRepository userRepository,
+    public SubmissionServiceImpl(UserRepository userRepository,
                                  GroupProblemRepository groupProblemRepository,
                                  SubmissionRepository submissionRepository,
                                  UserGroupRepository userGroupRepository,
-                                 AmazonS3Manager amazonS3Manager) {
-        this.repository = repository;
+                                 AmazonS3Manager amazonS3Manager) {;
         this.userRepository = userRepository;
         this.groupProblemRepository = groupProblemRepository;
         this.submissionRepository = submissionRepository;
@@ -120,6 +118,29 @@ public class SubmissionServiceImpl implements SubmissionService {
         List<Submission> submissions = submissionRepository.findByUserAndGroupProblem(user, groupProblem);
 
         return SubmissionConverter.toAllSubmission(submissions);
+    }
+
+    @Override
+    public SubmissionResponseDto.SubmissionDto getSubmission(Long groupProblemId, Long submissionId, String username) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        boolean isMember = userGroupRepository.existsByGroupIdAndUserUsername(groupProblem.getGroup().getId(), user.getUsername());
+
+        if (!isMember) {
+            throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
+        }
+
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_SUBMISSION));
+
+        return SubmissionConverter.toSubmission(submission);
     }
 
 

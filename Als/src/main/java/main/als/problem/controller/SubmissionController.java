@@ -26,10 +26,19 @@ public class SubmissionController {
     }
 
     @GetMapping("/{groupProblemId}")
-    public ApiResult<List<SubmissionResponseDto.AllSubmissionDto>> getSubmission(@PathVariable Long groupProblemId, @AuthenticationPrincipal CustomUserDetails UserDetails) {
+    public ApiResult<List<SubmissionResponseDto.AllSubmissionDto>> getAllSubmission(@PathVariable Long groupProblemId, @AuthenticationPrincipal CustomUserDetails UserDetails) {
         String username = UserDetails.getUsername();
 
         return ApiResult.onSuccess(submissionService.getAll(groupProblemId,username));
+    }
+
+    @GetMapping("/{groupProblemId}/{submissionId}")
+    public ApiResult<SubmissionResponseDto.SubmissionDto> getDetailSubmission(@PathVariable Long groupProblemId,
+                                            @PathVariable Long submissionId,
+                                            @AuthenticationPrincipal CustomUserDetails UserDetails) {
+        String username = UserDetails.getUsername();
+
+        return ApiResult.onSuccess(submissionService.getSubmission(groupProblemId,submissionId,username));
     }
 
 

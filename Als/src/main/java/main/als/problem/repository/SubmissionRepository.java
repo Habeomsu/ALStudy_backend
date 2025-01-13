@@ -6,11 +6,14 @@ import main.als.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     List<Submission> findByUserUsername(String username);
 
     List<Submission> findByUserAndGroupProblem(User user, GroupProblem groupProblem);
+
+    Optional<Submission> findById(long id);
 
 }

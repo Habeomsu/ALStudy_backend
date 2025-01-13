@@ -32,6 +32,18 @@ public class SubmissionConverter {
                 .collect(Collectors.toList());
     }
 
+    public static SubmissionResponseDto.SubmissionDto toSubmission(Submission submission) {
+        return SubmissionResponseDto.SubmissionDto.builder()
+                .id(submission.getId())
+                .groupProblemId(submission.getGroupProblem().getId())
+                .title(submission.getGroupProblem().getProblem().getTitle())
+                .username(submission.getUser().getUsername())
+                .language(submission.getLanguage())
+                .code(submission.getCode())
+                .status(submission.getStatus())
+                .submissionTime(submission.getSubmissionTime())
+                .build();
+    }
 
 
 }

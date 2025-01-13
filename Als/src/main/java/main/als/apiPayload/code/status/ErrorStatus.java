@@ -52,6 +52,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // file
     _FILE_NOT_FOUND(HttpStatus.NOT_FOUND,"FILE400_1","파일이 없습니다."),
+
+    // submission
+    _NOT_FOUND_SUBMISSION(HttpStatus.NOT_FOUND,"SUBMISSION400_1","제출내역이 없습니다."),
+
     ;
 
     private final HttpStatus httpStatus;

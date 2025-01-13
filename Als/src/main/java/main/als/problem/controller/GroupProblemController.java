@@ -23,7 +23,9 @@ public class GroupProblemController {
     }
 
     @GetMapping("/{groupId}")
-    public ApiResult<List<GroupProblemResponseDto.AllGroupProblem>> getGroupProblem(@PathVariable Long groupId) {
+    public ApiResult<List<GroupProblemResponseDto.AllGroupProblem>> getGroupProblem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                    @PathVariable Long groupId) {
+        String username = userDetails.getUsername();
         return ApiResult.onSuccess(groupProblemService.getGroupProblems(groupId));
     }
 

@@ -3,6 +3,7 @@ package main.als.problem.converter;
 import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
 import main.als.problem.entity.GroupProblem;
+import main.als.problem.entity.SubmissionStatus;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class GroupProblemConverter {
                 .collect(Collectors.toList());
     }
 
-    public static GroupProblemResponseDto.DetailGroupProblem toDetailGroupProblem (GroupProblem groupProblem) {
+    public static GroupProblemResponseDto.DetailGroupProblem toDetailGroupProblem (GroupProblem groupProblem, SubmissionStatus status) {
         return GroupProblemResponseDto.DetailGroupProblem.builder()
                 .groupProblemId(groupProblem.getId())
                 .problemId(groupProblem.getProblem().getId())
@@ -41,6 +42,7 @@ public class GroupProblemConverter {
                 .exampleInput(groupProblem.getProblem().getExampleInput())
                 .exampleOutput(groupProblem.getProblem().getExampleOutput())
                 .deductionAmount(groupProblem.getDeductionAmount())
+                .status(status)
                 .build();
     }
 

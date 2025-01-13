@@ -1,10 +1,8 @@
 package main.als.problem.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import main.als.problem.entity.ProblemType;
+import main.als.problem.entity.SubmissionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -58,6 +56,7 @@ public class GroupProblemResponseDto {
         private String exampleInput;
         private String exampleOutput;
         private BigDecimal deductionAmount;
+        private SubmissionStatus status;
     }
 
 

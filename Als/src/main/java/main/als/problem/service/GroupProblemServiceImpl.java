@@ -11,12 +11,20 @@ import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.Problem;
+import main.als.problem.entity.Submission;
+import main.als.problem.entity.SubmissionStatus;
 import main.als.problem.repository.GroupProblemRepository;
 import main.als.problem.repository.ProblemRepository;
+import main.als.problem.repository.SubmissionRepository;
+import main.als.problem.util.SubmissionStatusDeterminer;
+import main.als.user.entity.User;
+import main.als.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupProblemServiceImpl implements GroupProblemService {
@@ -25,13 +33,18 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     private final ProblemRepository problemRepository;
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final SubmissionRepository submissionRepository;
+    private final UserRepository userRepository;
 
     public GroupProblemServiceImpl(GroupProblemRepository groupProblemRepository,ProblemRepository problemRepository,
-                                   GroupRepository groupRepository,UserGroupRepository userGroupRepository) {
+                                   GroupRepository groupRepository,UserGroupRepository userGroupRepository,
+                                   SubmissionRepository submissionRepository,UserRepository userRepository) {
         this.groupProblemRepository = groupProblemRepository;
         this.problemRepository = problemRepository;
         this.groupRepository = groupRepository;
         this.userGroupRepository = userGroupRepository;
+        this.submissionRepository = submissionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -50,6 +63,7 @@ public class GroupProblemServiceImpl implements GroupProblemService {
             throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
         }
 
+        //그룹 모집기간 이후에 문제 생성 가능
 //        if(group.getDeadline().isAfter(LocalDateTime.now())) {
 //            throw new GeneralException(ErrorStatus._DEADLINE_NOT_PASSED);
 //        }
@@ -72,10 +86,14 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     public List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId) {
 
         if (!groupRepository.existsById(groupId)) {
-            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 적절한 예외 메시지
+            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP);
         }
 
         List<GroupProblem> groupProblems = groupProblemRepository.findByGroupId(groupId);
+
+//        List<Submission> userSubmissions = submissionRepository.findByUserUsername(username);
+//
+
         return GroupProblemConverter.toGroupProblemDto(groupProblems);
     }
 
@@ -92,7 +110,17 @@ public class GroupProblemServiceImpl implements GroupProblemService {
             throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
         }
 
-        return GroupProblemConverter.toDetailGroupProblem(groupProblem);
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        List<Submission> submissions = submissionRepository.findByUserAndGroupProblem(user, groupProblem);
+
+        SubmissionStatus finalStatus = SubmissionStatusDeterminer.determineFinalSubmissionStatus(submissions);
+
+        return GroupProblemConverter.toDetailGroupProblem(groupProblem,finalStatus);
     }
 
 

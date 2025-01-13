@@ -4,7 +4,9 @@ import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.aws.s3.AmazonS3Manager;
 import main.als.group.repository.UserGroupRepository;
+import main.als.problem.converter.SubmissionConverter;
 import main.als.problem.dto.SubmissionRequestDto;
+import main.als.problem.dto.SubmissionResponseDto;
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.Submission;
 import main.als.problem.entity.SubmissionStatus;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -96,4 +99,28 @@ public class SubmissionServiceImpl implements SubmissionService {
         submissionRepository.save(submission);
 
     }
+
+    @Override
+    public List<SubmissionResponseDto.AllSubmissionDto> getAll(Long groupProblemId, String username) {
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        boolean isMember = userGroupRepository.existsByGroupIdAndUserUsername(groupProblem.getGroup().getId(), user.getUsername());
+
+        if (!isMember) {
+            throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
+        }
+
+        List<Submission> submissions = submissionRepository.findByUserAndGroupProblem(user, groupProblem);
+
+        return SubmissionConverter.toAllSubmission(submissions);
+    }
+
+
 }

@@ -63,6 +63,13 @@ public class GroupProblemServiceImpl implements GroupProblemService {
             throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
         }
 
+        boolean isDuplicate = group.getGroupProblems().stream()
+                .anyMatch(gp -> gp.getProblem().getId().equals(problem.getId()));
+
+        if (isDuplicate) {
+            throw new GeneralException(ErrorStatus._DUPLICATE_GROUP_PROBLEM); // 중복된 문제 예외 처리
+        }
+
         //그룹 모집기간 이후에 문제 생성 가능
 //        if(group.getDeadline().isAfter(LocalDateTime.now())) {
 //            throw new GeneralException(ErrorStatus._DEADLINE_NOT_PASSED);

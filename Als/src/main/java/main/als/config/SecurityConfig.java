@@ -1,6 +1,7 @@
 package main.als.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import main.als.apiPayload.exception.CustomAuthenticationEntryPoint;
 import main.als.user.repository.RefreshRepository;
@@ -19,6 +20,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @EnableWebSecurity
 @Configuration
@@ -56,6 +61,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
                         .requestMatchers("/login","/join").permitAll()
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated()
@@ -79,7 +85,6 @@ public class SecurityConfig {
         http
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint));
-
 
 
 

@@ -46,13 +46,7 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
-        // Swagger 관련 엔드포인트 허용
-        if (requestURI.startsWith("/v3/api-docs") || requestURI.startsWith("/swagger-ui")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
+        
 
         if(accessToken == null) {
 

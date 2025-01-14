@@ -1,5 +1,6 @@
 package main.als.config;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -9,6 +10,13 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+
+@OpenAPIDefinition(
+        servers = {
+                @io.swagger.v3.oas.annotations.servers.Server(url = "http://localhost:8080", description = "Default Server url")
+        }
+)
 @Configuration
 public class SwaggerConfig {
 

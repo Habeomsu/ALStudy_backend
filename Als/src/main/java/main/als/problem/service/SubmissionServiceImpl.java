@@ -1,25 +1,38 @@
 package main.als.problem.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.aws.s3.AmazonS3Manager;
 import main.als.group.repository.UserGroupRepository;
 import main.als.problem.converter.SubmissionConverter;
-import main.als.problem.dto.SubmissionRequestDto;
 import main.als.problem.dto.SubmissionResponseDto;
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.Submission;
 import main.als.problem.entity.SubmissionStatus;
+import main.als.problem.entity.TestCase;
 import main.als.problem.repository.GroupProblemRepository;
 import main.als.problem.repository.SubmissionRepository;
+import main.als.problem.util.FlaskCommunicationUtil;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
@@ -43,6 +56,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
+    @Transactional
     public void submit(MultipartFile file,String language, Long groupProblemId, String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -81,6 +95,16 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         String codeUrl = amazonS3Manager.uploadFile(fileName,file);
 
+        // 테스트 케이스 가져오기
+        List<TestCase> testCases = groupProblem.getProblem().getTestCases();
+
+        // Flask 서버에 데이터 전송
+        ResponseEntity<Map> response;
+        try {
+            response = FlaskCommunicationUtil.submitToFlask(file, testCases);
+        } catch (IOException e) {
+            throw new GeneralException(ErrorStatus._FLASK_SERVER_ERROR); // 통신 오류 처리
+        }
 
         Submission submission = Submission.builder()
                 .groupProblem(groupProblem)
@@ -90,6 +114,19 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .status(SubmissionStatus.FAILED)
                 .submissionTime(LocalDateTime.now())
                 .build();
+
+        if (response.getBody() != null && response.getBody().containsKey("success")) {
+            boolean success = (Boolean) response.getBody().get("success");
+            if (success) {
+                submission.setStatus(SubmissionStatus.SUCCEEDED); // 성공 시 상태 변경
+            } else {
+                submission.setStatus(SubmissionStatus.FAILED); // 실패 시 상태 변경
+
+            }
+        } else {
+            throw new GeneralException(ErrorStatus._FLASK_SERVER_ERROR); // Flask 서버 오류 처리
+        }
+
 
         user.getSubmissions().add(submission);
         groupProblem.getSubmissions().add(submission);

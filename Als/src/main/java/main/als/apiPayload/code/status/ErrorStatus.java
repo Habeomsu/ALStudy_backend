@@ -53,10 +53,14 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // file
     _FILE_NOT_FOUND(HttpStatus.NOT_FOUND,"FILE400_1","파일이 없습니다."),
+    _FILE_WRITE_ERROR(HttpStatus.BAD_REQUEST,"FILE400_2","파일 저장 에러"),
 
     // submission
     _NOT_FOUND_SUBMISSION(HttpStatus.NOT_FOUND,"SUBMISSION400_1","제출내역이 없습니다."),
+    _JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST,"SUBMISSION400_2","테스트케이스 변환 오류입니다."),
 
+    // resttemplate 오류
+    _FLASK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"COMMUNICATION400_1","플라스크 통신 오류입니다."),
     ;
 
     private final HttpStatus httpStatus;

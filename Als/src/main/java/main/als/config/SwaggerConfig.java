@@ -27,7 +27,7 @@ public class SwaggerConfig {
                 .description("AlStudy API 명세서")
                 .version("1.0.0");
 
-        String jwtSchemeName = "JWT TOKEN";
+        String jwtSchemeName = "access";
         // API 요청헤더에 인증정보 포함
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
         // SecuritySchemes 등록

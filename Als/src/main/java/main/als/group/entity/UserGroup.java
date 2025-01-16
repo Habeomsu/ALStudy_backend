@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="user_groups")
+@Table(name = "user_groups")
 public class UserGroup {
 
     @Id

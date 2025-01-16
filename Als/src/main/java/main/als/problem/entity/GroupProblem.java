@@ -39,4 +39,10 @@ public class GroupProblem {
     private List<Submission> submissions = new ArrayList<>(); // 이 문제에 대한 제출 목록
 
     private BigDecimal deductionAmount; // 차감 금액
+
+    @Enumerated(EnumType.STRING)
+    private Deduct deduct;// 차감 상태
+
+
 }
+

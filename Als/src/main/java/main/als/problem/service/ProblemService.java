@@ -12,4 +12,5 @@ public interface ProblemService {
     List<ProblemResponseDto.AllProblemDto> getAllProblems();
     ProblemResponseDto.ProblemDto getProblemById(Long id);
     void deleteProblem(Long id);
+
 }

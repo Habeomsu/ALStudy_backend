@@ -1,18 +1,17 @@
 package main.als.problem.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.group.entity.Group;
+import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
 import main.als.problem.converter.GroupProblemConverter;
 import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
-import main.als.problem.entity.GroupProblem;
-import main.als.problem.entity.Problem;
-import main.als.problem.entity.Submission;
-import main.als.problem.entity.SubmissionStatus;
+import main.als.problem.entity.*;
 import main.als.problem.repository.GroupProblemRepository;
 import main.als.problem.repository.ProblemRepository;
 import main.als.problem.repository.SubmissionRepository;
@@ -27,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class GroupProblemServiceImpl implements GroupProblemService {
 
     private final GroupProblemRepository groupProblemRepository;
@@ -81,7 +81,9 @@ public class GroupProblemServiceImpl implements GroupProblemService {
                 .createdAt(LocalDateTime.now())
                 .deadline(groupProblemDto.getDeadline())
                 .deductionAmount(groupProblemDto.getDeductionAmount())
+                .deduct(Deduct.FALSE)
                 .build();
+
 
         group.getGroupProblems().add(groupProblem);
 
@@ -155,6 +157,66 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
         return GroupProblemConverter.toDetailGroupProblem(groupProblem,finalStatus);
     }
+
+    @Transactional
+    @Override
+    public void checkDeadlines(){
+        LocalDateTime currentTime = LocalDateTime.now();
+        List<GroupProblem> problems = groupProblemRepository.findAll();
+
+        for(GroupProblem groupProblem : problems){
+            if(currentTime.isAfter(groupProblem.getDeadline()) &&  groupProblem.getDeduct() == Deduct.FALSE){
+
+                Map<Long, List<Submission>> submissionsByUser = groupProblem.getSubmissions().stream()
+                        .collect(Collectors.groupingBy(submission -> submission.getUser().getId()));
+
+                // 그룹의 모든 사용자 목록을 가져와서 제출 여부 확인
+                List<UserGroup> userGroups = userGroupRepository.findByGroupId(groupProblem.getGroup().getId());
+
+                for (UserGroup userGroup : userGroups) {
+                    List<Submission> userSubmissions = submissionsByUser.get(userGroup.getUser().getId());
+
+                    // 제출이 없는 경우
+                    if (userSubmissions == null || userSubmissions.isEmpty()) {
+                        // 금액 차감 로직
+                        // 로그 출력
+                        log.info("User {} has been deducted amount {} due to no submission for group problem ID {}.",
+                                userGroup.getUser().getUsername(),
+                                groupProblem.getDeductionAmount(),
+                                groupProblem.getId());
+                        userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
+                        userGroupRepository.save(userGroup); // 상태 업데이트
+                    } else {
+                        // 사용자 제출 중 성공적인 제출이 있는지 확인
+                        boolean hasSuccessfulSubmission = userSubmissions.stream()
+                                .anyMatch(submission -> SubmissionStatus.SUCCEEDED.equals(submission.getStatus()));
+
+                        // 성공적인 제출이 없는 경우에만 금액 차감
+                        if (!hasSuccessfulSubmission) {
+                            // 금액 차감 로직
+                            userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
+                            userGroupRepository.save(userGroup); // 상태 업데이트
+                            // 로그 출력
+                            log.info("User {} has been deducted amount {} due to no successful submission for group problem ID {}.",
+                                    userGroup.getUser().getUsername(),
+                                    groupProblem.getDeductionAmount(),
+                                    groupProblem.getId());
+                        }
+                    }
+                }
+                // 금액 차감 완료 후 상태 업데이트
+                groupProblem.setDeduct(Deduct.TRUE);  // 금액 차감 여부 업데이트
+                groupProblemRepository.save(groupProblem); // 상태 업데이트
+
+            }
+
+
+
+        }
+
+
+    }
+
 
 
 }

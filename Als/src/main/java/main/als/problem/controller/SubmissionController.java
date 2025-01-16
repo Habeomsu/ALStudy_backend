@@ -2,6 +2,7 @@ package main.als.problem.controller;
 
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
 import main.als.apiPayload.ApiResult;
 import main.als.problem.dto.SubmissionRequestDto;
 
@@ -53,5 +54,23 @@ public class SubmissionController {
         return ApiResult.onSuccess();
 
     }
+
+    @GetMapping("/others/{groupProblemId}")
+    public ApiResult<List<SubmissionResponseDto.OtherAllSubmissionDto>> getOtherAllSubmission(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                               @PathVariable Long groupProblemId) {
+
+        String username = userDetails.getUsername();
+        return ApiResult.onSuccess(submissionService.getOtherAll(groupProblemId,username));
+
+    }
+
+    @GetMapping("/others/{groupProblemId}/{submissionId}")
+    public ApiResult<SubmissionResponseDto.OtherSubmissionDto> getOtherSubmission(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                           @PathVariable Long groupProblemId,
+                                           @PathVariable Long submissionId){
+        String username = userDetails.getUsername();
+        return ApiResult.onSuccess(submissionService.getOtherSubmission(groupProblemId,submissionId,username));
+    }
+
 
 }

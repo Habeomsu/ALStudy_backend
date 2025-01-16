@@ -10,9 +10,12 @@ public interface SubmissionService {
 
     void submit(MultipartFile file,String language, Long groupProblemId, String username);
 
-    List<SubmissionResponseDto.AllSubmissionDto> getAll(Long groupId, String username);
+    List<SubmissionResponseDto.AllSubmissionDto> getAll(Long groupProblemId, String username);
 
-    SubmissionResponseDto.SubmissionDto getSubmission(Long groupId,Long submissionId,String username);
+    SubmissionResponseDto.SubmissionDto getSubmission(Long groupProblemId,Long submissionId,String username);
 
+    List<SubmissionResponseDto.OtherAllSubmissionDto> getOtherAll(Long groupProblemId,String username);
+
+    SubmissionResponseDto.OtherSubmissionDto getOtherSubmission(Long groupProblemId,Long submissionId,String username);
 
 }

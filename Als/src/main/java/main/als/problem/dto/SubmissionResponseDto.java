@@ -58,4 +58,46 @@ public class SubmissionResponseDto {
 
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OtherSubmissionDto{
+
+        private Long id;
+
+        private Long groupProblemId;
+
+        private String title;
+
+        private String username;
+
+        private String language;
+
+        private String code;
+
+        private LocalDateTime submissionTime;
+
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OtherAllSubmissionDto{
+
+        private Long id;
+
+        private Long groupProblemId;
+
+        private String title;
+
+        private String username;
+
+        private String language;
+
+        private LocalDateTime submissionTime;
+
+    }
+
 }

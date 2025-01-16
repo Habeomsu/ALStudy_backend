@@ -45,5 +45,34 @@ public class SubmissionConverter {
                 .build();
     }
 
+    public static SubmissionResponseDto.OtherAllSubmissionDto toOtherAllSubmission(Submission submission) {
+        return SubmissionResponseDto.OtherAllSubmissionDto.builder()
+                .id(submission.getId())
+                .groupProblemId(submission.getGroupProblem().getId())
+                .title(submission.getGroupProblem().getProblem().getTitle())
+                .username(submission.getUser().getUsername())
+                .language(submission.getLanguage())
+                .submissionTime(submission.getSubmissionTime())
+                .build();
+    }
+
+    public static List<SubmissionResponseDto.OtherAllSubmissionDto> toOtherAllSubmission(List<Submission> submissions) {
+        return submissions.stream()
+                .map(SubmissionConverter::toOtherAllSubmission)
+                .collect(Collectors.toList());
+    }
+
+    public static SubmissionResponseDto.OtherSubmissionDto toOtherSubmission(Submission submission) {
+        return SubmissionResponseDto.OtherSubmissionDto.builder()
+                .id(submission.getId())
+                .groupProblemId(submission.getGroupProblem().getId())
+                .title(submission.getGroupProblem().getProblem().getTitle())
+                .username(submission.getUser().getUsername())
+                .language(submission.getLanguage())
+                .code(submission.getCode())
+                .submissionTime(submission.getSubmissionTime())
+                .build();
+    }
+
 
 }

@@ -71,7 +71,12 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
         }
 
-        // 파일 검증
+        if (LocalDateTime.now().isAfter(groupProblem.getDeadline())) {
+            throw new GeneralException(ErrorStatus._SUBMISSION_DEADLINE_EXCEEDED);// 기한 초과 예외
+        }
+
+
+            // 파일 검증
         if (file == null || file.isEmpty()) {
             throw new GeneralException(ErrorStatus._FILE_NOT_FOUND); // 파일이 없을 경우 예외 처리
         }
@@ -178,6 +183,59 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_SUBMISSION));
 
         return SubmissionConverter.toSubmission(submission);
+    }
+
+    @Override
+    public List<SubmissionResponseDto.OtherAllSubmissionDto> getOtherAll(Long groupProblemId, String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        boolean isMember = userGroupRepository.existsByGroupIdAndUserUsername(groupProblem.getGroup().getId(), user.getUsername());
+
+        if (!isMember) {
+            throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
+        }
+
+        // 성공한 제출을 가져오는 로직 추가
+        List<Submission> successfulSubmissions = submissionRepository.findByGroupProblemIdAndStatus(groupProblemId, SubmissionStatus.SUCCEEDED);
+
+        return SubmissionConverter.toOtherAllSubmission(successfulSubmissions);
+    }
+
+    @Override
+    public SubmissionResponseDto.OtherSubmissionDto getOtherSubmission(Long groupProblemId, Long submissionId, String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        boolean isMember = userGroupRepository.existsByGroupIdAndUserUsername(groupProblem.getGroup().getId(), user.getUsername());
+
+        if (!isMember) {
+            throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
+        }
+
+        // 사용자가 해당 문제에 대해 성공적으로 제출한 기록이 있는지 확인
+        boolean hasSucceededSubmission = submissionRepository.existsByUserAndGroupProblemAndStatus(user, groupProblem, SubmissionStatus.SUCCEEDED);
+
+        if (!hasSucceededSubmission) {
+            throw new GeneralException(ErrorStatus._NO_SUCCEEDED_SUBMISSION); // 성공한 제출이 없을 경우 예외 처리
+        }
+
+        // 제출 상세 조회 로직
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_SUBMISSION));
+
+
+        return SubmissionConverter.toOtherSubmission(submission);
     }
 
 

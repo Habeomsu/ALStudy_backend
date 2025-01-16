@@ -2,6 +2,7 @@ package main.als.problem.repository;
 
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.Submission;
+import main.als.problem.entity.SubmissionStatus;
 import main.als.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     Optional<Submission> findById(long id);
 
+    List<Submission> findByGroupProblemIdAndStatus(long groupProblemId,SubmissionStatus status );
+
+    // 사용자, 그룹 문제, 제출 상태를 기반으로 제출 존재 여부 확인
+    boolean existsByUserAndGroupProblemAndStatus(User user, GroupProblem groupProblem, SubmissionStatus status);
 }

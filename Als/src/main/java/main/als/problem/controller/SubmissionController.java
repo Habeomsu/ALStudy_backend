@@ -4,6 +4,7 @@ package main.als.problem.controller;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Path;
 import main.als.apiPayload.ApiResult;
+import main.als.page.PagingConverter;
 import main.als.problem.dto.SubmissionRequestDto;
 
 import main.als.problem.dto.SubmissionResponseDto;
@@ -27,10 +28,15 @@ public class SubmissionController {
     }
 
     @GetMapping("/{groupProblemId}")
-    public ApiResult<List<SubmissionResponseDto.AllSubmissionDto>> getAllSubmission(@PathVariable Long groupProblemId, @AuthenticationPrincipal CustomUserDetails UserDetails) {
+    public ApiResult<SubmissionResponseDto.SearchSubmissionDto> getAllSubmission(@PathVariable Long groupProblemId,
+                                                                                    @AuthenticationPrincipal CustomUserDetails UserDetails,
+                                                                                    @RequestParam(defaultValue = "0") int page,
+                                                                                    @RequestParam(defaultValue = "10") int size,
+                                                                                    @RequestParam(defaultValue = "desc") String sort) {
+
         String username = UserDetails.getUsername();
 
-        return ApiResult.onSuccess(submissionService.getAll(groupProblemId,username));
+        return ApiResult.onSuccess(submissionService.getAll(groupProblemId,username, PagingConverter.toPagingDto(page,size,sort)));
     }
 
     @GetMapping("/{groupProblemId}/{submissionId}")

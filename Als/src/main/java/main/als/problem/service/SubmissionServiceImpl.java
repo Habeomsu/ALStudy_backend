@@ -7,6 +7,7 @@ import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.aws.s3.AmazonS3Manager;
 import main.als.group.repository.UserGroupRepository;
+import main.als.page.PostPagingDto;
 import main.als.problem.converter.SubmissionConverter;
 import main.als.problem.dto.SubmissionResponseDto;
 import main.als.problem.entity.GroupProblem;
@@ -19,6 +20,10 @@ import main.als.problem.util.FlaskCommunicationUtil;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,7 +34,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -141,7 +145,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public List<SubmissionResponseDto.AllSubmissionDto> getAll(Long groupProblemId, String username) {
+    public SubmissionResponseDto.SearchSubmissionDto getAll(Long groupProblemId, String username, PostPagingDto.PagingDto pagingDto) {
 
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -157,9 +161,12 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
         }
 
-        List<Submission> submissions = submissionRepository.findByUserAndGroupProblem(user, groupProblem);
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
 
-        return SubmissionConverter.toAllSubmission(submissions);
+        Page<Submission> submissions = submissionRepository.findByUserAndGroupProblem(user, groupProblem,pageable);
+
+        return SubmissionConverter.toSearchSubmission(submissions);
     }
 
     @Override

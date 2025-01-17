@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import main.als.problem.dto.SubmissionRequestDto;
 import main.als.problem.dto.SubmissionResponseDto;
 import main.als.problem.entity.Submission;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,16 @@ public class SubmissionConverter {
         return submissions.stream()
                 .map(SubmissionConverter::toAllSubmission)
                 .collect(Collectors.toList());
+    }
+
+    public static SubmissionResponseDto.SearchSubmissionDto toSearchSubmission(Page<Submission> submissions) {
+        return SubmissionResponseDto.SearchSubmissionDto.builder()
+                .submissionResDtos(toAllSubmission(submissions.getContent()))
+                .isFirst(submissions.isFirst())
+                .isLast(submissions.isLast())
+                .listSize(submissions.getTotalPages())
+                .totalElements(submissions.getTotalElements())
+                .build();
     }
 
     public static SubmissionResponseDto.SubmissionDto toSubmission(Submission submission) {

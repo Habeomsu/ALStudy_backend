@@ -8,6 +8,7 @@ import main.als.group.entity.Group;
 import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
+import main.als.page.PostPagingDto;
 import main.als.problem.converter.GroupProblemConverter;
 import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
@@ -18,6 +19,10 @@ import main.als.problem.repository.SubmissionRepository;
 import main.als.problem.util.SubmissionStatusDeterminer;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -92,13 +97,16 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     }
 
     @Override
-    public List<GroupProblemResponseDto.AllGroupProblem> getGroupProblems(Long groupId,String username) {
+    public GroupProblemResponseDto.SearchGroupProblem getGroupProblems(Long groupId, String username, PostPagingDto.PagingDto pagingDto) {
 
         if (!groupRepository.existsById(groupId)) {
             throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP);
         }
 
-        List<GroupProblem> groupProblems = groupProblemRepository.findByGroupId(groupId);
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"createdAt");
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        Page<GroupProblem> groupProblems = groupProblemRepository.findByGroupId(groupId,pageable);
 
         List<Submission> userSubmissions = submissionRepository.findByUserUsername(username);
 
@@ -124,7 +132,8 @@ public class GroupProblemServiceImpl implements GroupProblemService {
                         }
                 ));
 
-        return GroupProblemConverter.toGroupProblemDto(groupProblems, submissionStatusMap);
+
+        return GroupProblemConverter.toSearchGroupProblemDto(groupProblems, submissionStatusMap);
     }
 
     @Override

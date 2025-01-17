@@ -4,6 +4,7 @@ import main.als.problem.dto.GroupProblemRequestDto;
 import main.als.problem.dto.GroupProblemResponseDto;
 import main.als.problem.entity.GroupProblem;
 import main.als.problem.entity.SubmissionStatus;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,17 @@ public class GroupProblemConverter {
                 })
                 .collect(Collectors.toList());
     }
+
+    public static GroupProblemResponseDto.SearchGroupProblem toSearchGroupProblemDto (Page<GroupProblem> groupProblems,Map<Long, SubmissionStatus> submissionStatusMap) {
+        return GroupProblemResponseDto.SearchGroupProblem.builder()
+                .groupProblemResDtos(toGroupProblemDto(groupProblems.getContent(), submissionStatusMap))
+                .isFirst(groupProblems.isFirst())
+                .isLast(groupProblems.isLast())
+                .listSize(groupProblems.getTotalPages())
+                .totalElements(groupProblems.getTotalElements())
+                .build();
+    }
+
 
     public static GroupProblemResponseDto.DetailGroupProblem toDetailGroupProblem (GroupProblem groupProblem, SubmissionStatus status) {
         return GroupProblemResponseDto.DetailGroupProblem.builder()

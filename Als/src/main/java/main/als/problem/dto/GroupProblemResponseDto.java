@@ -6,24 +6,9 @@ import main.als.problem.entity.SubmissionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GroupProblemResponseDto {
-
-    @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class GroupProblem{
-
-        private Long groupProblemId;
-        private Long problemId;
-        private Long groupId;
-
-        private LocalDateTime createdAt;
-        private LocalDateTime deadline;
-
-        private BigDecimal deductionAmount;
-    }
 
     @Getter
     @Builder
@@ -38,6 +23,18 @@ public class GroupProblemResponseDto {
         private LocalDateTime deadline;
         private BigDecimal deductionAmount;
         private SubmissionStatus status;
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchGroupProblem {
+        List<GroupProblemResponseDto.AllGroupProblem> groupProblemResDtos;
+        boolean isFirst;
+        boolean isLast;
+        int listSize;
+        long totalElements;
     }
 
 

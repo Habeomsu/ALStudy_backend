@@ -81,15 +81,8 @@ public class UserGroupServiceImpl implements UserGroupService {
         if (userGroups == null || userGroups.isEmpty()) {
             throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 그룹이 존재하지 않을 때 예외 발생
         }
+        
 
-        List<User> users = userGroups.stream()
-                .map(UserGroup::getUser)
-                .collect(Collectors.toList());
-
-        List<BigDecimal> deposits = userGroups.stream()
-                .map(UserGroup::getUserDepositAmount) // 예치금 가져오기
-                .collect(Collectors.toList());
-
-        return UserConverter.toUsernameDto(users, deposits);
+        return UserConverter.toUsernameDto(userGroups);
     }
 }

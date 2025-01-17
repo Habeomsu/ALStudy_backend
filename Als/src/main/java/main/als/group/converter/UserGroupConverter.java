@@ -3,6 +3,7 @@ package main.als.group.converter;
 import main.als.group.dto.UserGroupRequestDto;
 import main.als.group.dto.UserGroupResponseDto;
 import main.als.group.entity.UserGroup;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,5 +25,15 @@ public class UserGroupConverter {
         return userGroups.stream()
                 .map(UserGroupConverter::toUserGroupDto)
                 .collect(Collectors.toList());
+    }
+
+    public static UserGroupResponseDto.SearchUserGroups toSearchUserGroups(Page<UserGroup> userGroups) {
+        return UserGroupResponseDto.SearchUserGroups.builder()
+                .userGroupsResDtos(toUserGroupsDto(userGroups.getContent()))
+                .isFirst(userGroups.isFirst())
+                .isLast(userGroups.isLast())
+                .listSize(userGroups.getTotalPages())
+                .totalElements(userGroups.getTotalElements())
+                .build();
     }
 }

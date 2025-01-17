@@ -4,13 +4,19 @@ package main.als.problem.service;
 import jakarta.transaction.Transactional;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
+import main.als.page.PostPagingDto;
 import main.als.problem.converter.ProblemConverter;
 import main.als.problem.dto.ProblemRequestDto;
 import main.als.problem.dto.ProblemResponseDto;
 import main.als.problem.entity.Problem;
+import main.als.problem.entity.ProblemType;
 import main.als.problem.entity.TestCase;
 import main.als.problem.repository.ProblemRepository;
 import main.als.problem.repository.TestCaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,11 +50,26 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public List<ProblemResponseDto.AllProblemDto> getAllProblems() {
+    public ProblemResponseDto.SearchProblems getAllProblems(PostPagingDto.PagingDto pagingDto,String problemType) {
 
-        List<Problem> problems = problemRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"id");
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
 
-        return ProblemConverter.toAllProblemDto(problems);
+        Page<Problem> problems;
+
+        if (problemType != null && !problemType.isEmpty()) {
+            try {
+                // 문자열을 ProblemType으로 변환
+                ProblemType type = ProblemType.valueOf(problemType.toUpperCase());
+                problems = problemRepository.findByProblemType(type, pageable);
+            } catch (IllegalArgumentException e) {
+                throw new GeneralException(ErrorStatus._INVALID_PROBLEM_TYPE); // 잘못된 문제 유형 처리
+            }
+        } else {
+            problems = problemRepository.findAll(pageable);
+        }
+
+        return ProblemConverter.toSearchProblemDto(problems);
     }
 
     @Override

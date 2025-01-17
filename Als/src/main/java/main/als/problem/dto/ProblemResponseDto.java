@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import main.als.group.dto.GroupResponseDto;
 import main.als.problem.entity.ProblemType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProblemResponseDto {
 
@@ -42,5 +44,19 @@ public class ProblemResponseDto {
         private LocalDateTime createdAt;
 
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchProblems {
+        List<ProblemResponseDto.AllProblemDto> problemResDtos;
+        boolean isFirst;
+        boolean isLast;
+        int listSize;
+        long totalElements;
+    }
+
+
 
 }

@@ -2,6 +2,7 @@ package main.als.problem.controller;
 
 import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
+import main.als.page.PagingConverter;
 import main.als.problem.dto.ProblemRequestDto;
 import main.als.problem.dto.ProblemResponseDto;
 import main.als.problem.service.ProblemService;
@@ -20,12 +21,16 @@ public class ProblemController {
     }
 
     @GetMapping
-    public ApiResult<List<ProblemResponseDto.AllProblemDto>> allProblems(){
-        return ApiResult.onSuccess(problemService.getAllProblems());
+    public ApiResult<ProblemResponseDto.SearchProblems> allProblems(@RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size,
+                                                                         @RequestParam(defaultValue = "desc") String sort,
+                                                                         @RequestParam(required = false) String problemType) {
+        return ApiResult.onSuccess(problemService.getAllProblems(PagingConverter.toPagingDto(page, size, sort),problemType));
     }
 
     @GetMapping("/{problemId}")
     public ApiResult<ProblemResponseDto.ProblemDto> problemById(@PathVariable Long problemId){
+
         return ApiResult.onSuccess(problemService.getProblemById(problemId));
     }
 

@@ -3,6 +3,7 @@ package main.als.problem.converter;
 import main.als.problem.dto.ProblemRequestDto;
 import main.als.problem.dto.ProblemResponseDto;
 import main.als.problem.entity.Problem;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,6 +56,16 @@ public class ProblemConverter {
                 .map(ProblemConverter::toAllProblemDto)
                 .collect(Collectors.toList());
 
+    }
+
+    public static ProblemResponseDto.SearchProblems toSearchProblemDto(Page<Problem> problems){
+        return ProblemResponseDto.SearchProblems.builder()
+                .problemResDtos(toAllProblemDto(problems.getContent()))
+                .isFirst(problems.isFirst())
+                .isLast(problems.isLast())
+                .listSize(problems.getTotalPages())
+                .totalElements(problems.getTotalElements())
+                .build();
     }
 
 }

@@ -15,9 +15,10 @@ public interface SubmissionService {
 
     SubmissionResponseDto.SubmissionDto getSubmission(Long groupProblemId,Long submissionId,String username);
 
-    List<SubmissionResponseDto.OtherAllSubmissionDto> getOtherAll(Long groupProblemId,String username);
+    SubmissionResponseDto.SearchOtherSubmissionDto getOtherAll(Long groupProblemId,String username,PostPagingDto.PagingDto pagingDto);
 
     SubmissionResponseDto.OtherSubmissionDto getOtherSubmission(Long groupProblemId,Long submissionId,String username);
+
 
 
 }

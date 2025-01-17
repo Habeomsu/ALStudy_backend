@@ -62,11 +62,14 @@ public class SubmissionController {
     }
 
     @GetMapping("/others/{groupProblemId}")
-    public ApiResult<List<SubmissionResponseDto.OtherAllSubmissionDto>> getOtherAllSubmission(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                               @PathVariable Long groupProblemId) {
+    public ApiResult<SubmissionResponseDto.SearchOtherSubmissionDto> getOtherAllSubmission(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                              @PathVariable Long groupProblemId,
+                                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                                              @RequestParam(defaultValue = "10") int size,
+                                                                                              @RequestParam(defaultValue = "desc") String sort) {
 
         String username = userDetails.getUsername();
-        return ApiResult.onSuccess(submissionService.getOtherAll(groupProblemId,username));
+        return ApiResult.onSuccess(submissionService.getOtherAll(groupProblemId,username,PagingConverter.toPagingDto(page,size,sort)));
 
     }
 

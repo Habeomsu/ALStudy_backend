@@ -114,4 +114,16 @@ public class SubmissionResponseDto {
 
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchOtherSubmissionDto {
+        List<SubmissionResponseDto.OtherAllSubmissionDto> otherSubmissionResDtos;
+        boolean isFirst;
+        boolean isLast;
+        int listSize;
+        long totalElements;
+    }
+
 }

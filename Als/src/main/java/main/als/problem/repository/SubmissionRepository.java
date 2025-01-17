@@ -23,6 +23,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
 
     List<Submission> findByGroupProblemIdAndStatus(long groupProblemId,SubmissionStatus status );
 
+    Page<Submission> findByGroupProblemIdAndStatus(long groupProblemId,SubmissionStatus status,Pageable pageable);
+
     // 사용자, 그룹 문제, 제출 상태를 기반으로 제출 존재 여부 확인
     boolean existsByUserAndGroupProblemAndStatus(User user, GroupProblem groupProblem, SubmissionStatus status);
 }

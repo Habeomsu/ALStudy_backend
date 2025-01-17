@@ -73,6 +73,16 @@ public class SubmissionConverter {
                 .collect(Collectors.toList());
     }
 
+    public static SubmissionResponseDto.SearchOtherSubmissionDto toSearchOtherSubmission(Page<Submission> otherSubmissions) {
+        return SubmissionResponseDto.SearchOtherSubmissionDto.builder()
+                .otherSubmissionResDtos(toOtherAllSubmission(otherSubmissions.getContent()))
+                .isFirst(otherSubmissions.isFirst())
+                .isLast(otherSubmissions.isLast())
+                .listSize(otherSubmissions.getTotalPages())
+                .totalElements(otherSubmissions.getTotalElements())
+                .build();
+    }
+
     public static SubmissionResponseDto.OtherSubmissionDto toOtherSubmission(Submission submission) {
         return SubmissionResponseDto.OtherSubmissionDto.builder()
                 .id(submission.getId())

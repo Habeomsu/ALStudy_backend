@@ -193,7 +193,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public List<SubmissionResponseDto.OtherAllSubmissionDto> getOtherAll(Long groupProblemId, String username) {
+    public SubmissionResponseDto.SearchOtherSubmissionDto getOtherAll(Long groupProblemId, String username,PostPagingDto.PagingDto pagingDto) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
@@ -208,10 +208,13 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP); // 권한이 없는 경우 예외 처리
         }
 
-        // 성공한 제출을 가져오는 로직 추가
-        List<Submission> successfulSubmissions = submissionRepository.findByGroupProblemIdAndStatus(groupProblemId, SubmissionStatus.SUCCEEDED);
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
 
-        return SubmissionConverter.toOtherAllSubmission(successfulSubmissions);
+        // 성공한 제출을 가져오는 로직 추가
+        Page<Submission> successfulSubmissions = submissionRepository.findByGroupProblemIdAndStatus(groupProblemId, SubmissionStatus.SUCCEEDED,pageable);
+
+        return SubmissionConverter.toSearchOtherSubmission(successfulSubmissions);
     }
 
     @Override

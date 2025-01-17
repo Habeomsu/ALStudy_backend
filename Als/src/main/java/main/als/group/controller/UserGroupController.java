@@ -56,9 +56,12 @@ public class UserGroupController {
     }
 
     @GetMapping("/{groupId}/users")
-    public ApiResult<List<UserDto.UsernameDto>> getUsers(@PathVariable("groupId") Long groupId){
-        List<UserDto.UsernameDto> userDtos = userGroupService.getUsersByGroupId(groupId);
-        return ApiResult.onSuccess(userDtos);
+    public ApiResult<UserDto.SearchUsers> getUsers(@PathVariable("groupId") Long groupId,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size,
+                                                         @RequestParam(defaultValue = "asc") String sort){
+        userGroupService.getUsersByGroupId(groupId, PagingConverter.toPagingDto(page,size,sort));
+        return ApiResult.onSuccess(userGroupService.getUsersByGroupId(groupId, PagingConverter.toPagingDto(page,size,sort)));
 
     }
 

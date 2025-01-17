@@ -6,10 +6,15 @@ import main.als.group.entity.Group;
 import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
+import main.als.page.PostPagingDto;
 import main.als.user.converter.UserConverter;
 import main.als.user.dto.UserDto;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,15 +79,19 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public List<UserDto.UsernameDto> getUsersByGroupId(Long groupId) {
+    public UserDto.SearchUsers getUsersByGroupId(Long groupId, PostPagingDto.PagingDto pagingDto) {
 
-        List<UserGroup> userGroups = userGroupRepository.findByGroupId(groupId);
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"userDepositAmount");
 
-        if (userGroups == null || userGroups.isEmpty()) {
+
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+        Page<UserGroup> userGroupsPage = userGroupRepository.findByGroupId(groupId, pageable);
+
+        if (userGroupsPage == null || userGroupsPage.isEmpty()) {
             throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP); // 그룹이 존재하지 않을 때 예외 발생
         }
-        
 
-        return UserConverter.toUsernameDto(userGroups);
+
+        return UserConverter.toUserDtos(userGroupsPage);
     }
 }

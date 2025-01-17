@@ -3,6 +3,7 @@ package main.als.group.converter;
 import main.als.group.dto.UserGroupRequestDto;
 import main.als.group.dto.UserGroupResponseDto;
 import main.als.group.entity.UserGroup;
+import main.als.user.dto.UserDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

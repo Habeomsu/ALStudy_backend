@@ -7,6 +7,7 @@ import main.als.group.dto.GroupRequestDto;
 import main.als.group.dto.GroupResponseDto;
 import main.als.group.entity.Group;
 import main.als.group.service.GroupService;
+import main.als.page.PostPagingDto;
 import main.als.user.dto.CustomUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public ApiResult<List<GroupResponseDto.AllGroupDto>> getAll(){
-        return ApiResult.onSuccess(groupService.getAllGroups());
+    public ApiResult<GroupResponseDto.SearchGroups> getAll(@RequestBody PostPagingDto.PagingDto pagingDto) {
+        return ApiResult.onSuccess(groupService.getAllGroups(pagingDto));
     }
 
     @PostMapping

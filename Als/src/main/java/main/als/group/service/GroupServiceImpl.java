@@ -10,8 +10,12 @@ import main.als.group.entity.Group;
 import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
+import main.als.page.PostPagingDto;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,9 +74,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupResponseDto.AllGroupDto> getAllGroups() {
-        List<Group> groups = groupRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        return GroupConverter.toAllGroupDto(groups);
+    public GroupResponseDto.SearchGroups getAllGroups(PostPagingDto.PagingDto pagingDto) {
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()), "id");
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+        Page<Group> groupPages = groupRepository.findAll(pageable);
+        return GroupConverter.toSearchGroupDto(groupPages);
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class GroupResponseDto {
 
@@ -24,5 +25,19 @@ public class GroupResponseDto {
         LocalDateTime deadline;
         LocalDateTime stutyEndDate;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchGroups {
+        List<AllGroupDto> groupResDtos;
+        boolean isFirst;
+        boolean isLast;
+        int listSize;
+        long totalElements;
+    }
+
+
 
 }

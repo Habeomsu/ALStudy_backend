@@ -93,7 +93,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(createCookie("refresh", refresh));
 
         // ApiResult 생성
-        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK);
+        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK,username);
 
         JsonResponseUtil.sendJsonResponse(response, HttpServletResponse.SC_OK, apiResult);
 

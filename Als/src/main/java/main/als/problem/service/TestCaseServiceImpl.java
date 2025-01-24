@@ -41,6 +41,17 @@ public class TestCaseServiceImpl implements TestCaseService {
     }
 
     @Override
+    public TestCaseResponseDto.TestCaseDto getTestCaseById(Long testcaseId) {
+
+        TestCase testcase = testCaseRepository.findById(testcaseId)
+                .orElseThrow(()-> new GeneralException(ErrorStatus._NOT_FOUND_TESTCASE));
+
+        return TestCaseConverter.toTestCase(testcase);
+
+    }
+
+
+    @Override
     public List<TestCaseResponseDto.TestCaseDto> getTestCasesByProblemId(Long problemId) {
 
         if (!problemRepository.existsById(problemId)) {
@@ -53,11 +64,27 @@ public class TestCaseServiceImpl implements TestCaseService {
 
     @Override
     @Transactional
-    public void deleteTestCase(Long id) {
-        TestCase testCase = testCaseRepository.findById(id)
+    public void updateTestCase(TestCaseRequestDto.TestCaseDto testCaseDto, Long testcaseId) {
+        TestCase testCase = testCaseRepository.findById(testcaseId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_TESTCASE));
+
+        testCase.setInput(testCaseDto.getInput());
+        testCase.setExpectedOutput(testCaseDto.getExpectedOutput());
+
+        testCaseRepository.save(testCase);
+
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteTestCase(Long testcaseId) {
+        TestCase testCase = testCaseRepository.findById(testcaseId)
                 .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_TESTCASE));
 
         testCaseRepository.delete(testCase);
 
     }
+
+
 }

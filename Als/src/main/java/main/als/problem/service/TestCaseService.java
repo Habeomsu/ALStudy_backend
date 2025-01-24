@@ -9,4 +9,6 @@ public interface TestCaseService {
     void createTestCase(TestCaseRequestDto.TestCaseDto testCaseDto,Long problemId);
     List<TestCaseResponseDto.TestCaseDto> getTestCasesByProblemId(Long problemId);
     void deleteTestCase(Long id);
+    void updateTestCase(TestCaseRequestDto.TestCaseDto testCaseDto,Long testcaseId);
+    TestCaseResponseDto.TestCaseDto getTestCaseById(Long testcaseId);
 }

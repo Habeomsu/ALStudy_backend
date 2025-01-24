@@ -13,6 +13,7 @@ import main.als.problem.entity.ProblemType;
 import main.als.problem.entity.TestCase;
 import main.als.problem.repository.ProblemRepository;
 import main.als.problem.repository.TestCaseRepository;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,49 @@ public class ProblemServiceImpl implements ProblemService {
             problemRepository.save(problem);
         } catch (Exception e) {
             throw new GeneralException(ErrorStatus._NOT_CREATED_PROBLEM);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateProblem(ProblemRequestDto.createProblemDto requestDto,Long problemId) {
+        try {
+            Problem problem = problemRepository.findById(problemId)
+                    .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_PROBLEM));
+
+            // 문제의 속성을 업데이트합니다.
+            problem.setTitle(requestDto.getTitle());
+            problem.setDifficultyLevel(requestDto.getDifficultyLevel());
+            problem.setProblemType(requestDto.getProblemType());
+            problem.setDescription(requestDto.getDescription());
+            problem.setInputDescription(requestDto.getInputDescription());
+            problem.setOutputDescription(requestDto.getOutputDescription());
+            problem.setExampleInput(requestDto.getExampleInput());
+            problem.setExampleOutput(requestDto.getExampleOutput());
+
+            // TestCase 업데이트
+            if (!problem.getTestCases().isEmpty()) {
+                // 첫 번째 TestCase를 업데이트
+                TestCase testCase = problem.getTestCases().get(0); // 예시로 첫 번째 TestCase 사용
+                testCase.setInput(requestDto.getExampleInput());
+                testCase.setExpectedOutput(requestDto.getExampleOutput());
+            } else {
+                // TestCase가 없다면 새로 추가할 수 있습니다.
+                TestCase newTestCase = TestCase.builder()
+                        .problem(problem)
+                        .input(requestDto.getExampleInput())
+                        .expectedOutput(requestDto.getExampleOutput())
+                        .build();
+                problem.getTestCases().add(newTestCase);
+            }
+
+            // 문제 저장 (변경 사항이 자동으로 반영됨)
+            problemRepository.save(problem);
+
+        } catch (StaleObjectStateException e) {
+            throw new GeneralException(ErrorStatus._BAD_REQUEST);
+        } catch (Exception e) {
+            throw new GeneralException(ErrorStatus._NOT_UPDATED_PROBLEM);
         }
     }
 

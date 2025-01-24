@@ -12,6 +12,7 @@ import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.code.status.SuccessStatus;
 import main.als.user.dto.CustomUserDetails;
 import main.als.user.dto.JoinDto;
+import main.als.user.dto.LoginResponseDto;
 import main.als.user.entity.Refresh;
 import main.als.user.repository.RefreshRepository;
 import main.als.user.util.JsonResponseUtil;
@@ -84,7 +85,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String access = jwtUtil.createJwt("access",username, role, 6000000L);
+        String access = jwtUtil.createJwt("access",username, role, 600000L);
         String refresh = jwtUtil.createJwt("refresh",username, role, 86400000L);
 
         addRefresh(username, refresh, 86400000L);
@@ -93,7 +94,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(createCookie("refresh", refresh));
 
         // ApiResult 생성
-        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK,username);
+        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK, new LoginResponseDto.LoginResponse(username,role));
 
         JsonResponseUtil.sendJsonResponse(response, HttpServletResponse.SC_OK, apiResult);
 

@@ -41,6 +41,13 @@ public class ProblemController {
         return ApiResult.onSuccess();
     }
 
+    @PutMapping("/{problemId}")
+    public ApiResult<?> updateProblem(@Valid @RequestBody ProblemRequestDto.createProblemDto createProblemDto
+    , @PathVariable Long problemId) {
+        problemService.updateProblem(createProblemDto,problemId);
+        return ApiResult.onSuccess();
+    }
+
     @DeleteMapping("/{problemId}")
     public ApiResult<Void> deleteProblem(@PathVariable Long problemId) {
         problemService.deleteProblem(problemId);

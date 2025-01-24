@@ -13,4 +13,5 @@ public interface ProblemService {
     ProblemResponseDto.SearchProblems getAllProblems(PostPagingDto.PagingDto pagingDto,String problemType);
     ProblemResponseDto.ProblemDto getProblemById(Long id);
     void deleteProblem(Long id);
+    void updateProblem(ProblemRequestDto.createProblemDto requestDto,Long problemId);
 }

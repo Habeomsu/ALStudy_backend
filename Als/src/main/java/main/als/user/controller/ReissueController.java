@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import main.als.apiPayload.ApiResult;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.code.status.SuccessStatus;
@@ -32,6 +33,7 @@ public class ReissueController {
     }
 
     @PostMapping("/reissue")
+    @Transactional
     public ApiResult<?> reissue(HttpServletRequest request, HttpServletResponse response){
 
         String refresh = null;
@@ -73,10 +75,10 @@ public class ReissueController {
         String role = jwtUtil.getRole(refresh);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, role, 6000000L);
+        String newAccess = jwtUtil.createJwt("access", username, role, 600000L);
         String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
-        refreshRepository.deleteByRefresh(refresh);
+        refreshRepository.deleteByUsername(username);
         addRefresh(username, newRefresh, 86400000L);
 
 

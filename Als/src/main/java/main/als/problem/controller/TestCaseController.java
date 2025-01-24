@@ -25,9 +25,10 @@ public class TestCaseController {
         return ApiResult.onSuccess(testCaseService.getTestCasesByProblemId(problemId));
     }
 
-    @PostMapping
-    public ApiResult<?> createTestCase(@RequestBody @Valid TestCaseRequestDto.TestCaseDto testCaseDto) {
-        testCaseService.createTestCase(testCaseDto);
+    @PostMapping("/{problemId}")
+    public ApiResult<?> createTestCase(@RequestBody @Valid TestCaseRequestDto.TestCaseDto testCaseDto,
+                                       @PathVariable Long problemId) {
+        testCaseService.createTestCase(testCaseDto,problemId);
         return ApiResult.onSuccess();
     }
 

@@ -17,9 +17,6 @@ public class TestCaseRequestDto {
     public static class TestCaseDto{
 
 
-        @NotNull(message = "Problem ID는 필수입니다.")
-        private Long problemId;
-
         @NotBlank(message = "입력 값은 필수입니다.")
         private String input;
 

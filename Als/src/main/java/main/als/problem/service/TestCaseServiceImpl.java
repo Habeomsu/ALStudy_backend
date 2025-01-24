@@ -27,8 +27,8 @@ public class TestCaseServiceImpl implements TestCaseService {
 
     @Override
     @Transactional
-    public void createTestCase(TestCaseRequestDto.TestCaseDto testCaseDto) {
-        Problem problem = problemRepository.findById(testCaseDto.getProblemId())
+    public void createTestCase(TestCaseRequestDto.TestCaseDto testCaseDto,Long problemId) {
+        Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(()-> new GeneralException(ErrorStatus._NOT_FOUND_PROBLEM));
         TestCase testCase = TestCase.builder()
                 .problem(problem)

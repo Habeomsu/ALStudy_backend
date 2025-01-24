@@ -6,7 +6,7 @@ import main.als.problem.dto.TestCaseResponseDto;
 import java.util.List;
 
 public interface TestCaseService {
-    void createTestCase(TestCaseRequestDto.TestCaseDto testCaseDto);
+    void createTestCase(TestCaseRequestDto.TestCaseDto testCaseDto,Long problemId);
     List<TestCaseResponseDto.TestCaseDto> getTestCasesByProblemId(Long problemId);
     void deleteTestCase(Long id);
 }

@@ -75,9 +75,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupResponseDto.SearchGroups getAllGroups(PostPagingDto.PagingDto pagingDto) {
-        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()), "id");
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()), "deadline");
         Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
-        Page<Group> groupPages = groupRepository.findAll(pageable);
+        // 현재 시간 가져오기
+        LocalDateTime now = LocalDateTime.now();
+
+        // 모집 기간이 지나지 않은 그룹만 가져오기
+        Page<Group> groupPages = groupRepository.findAllByDeadlineAfter(now, pageable);
         return GroupConverter.toSearchGroupDto(groupPages);
     }
 

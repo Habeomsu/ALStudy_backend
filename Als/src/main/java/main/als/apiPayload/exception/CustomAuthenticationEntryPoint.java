@@ -50,7 +50,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         // 상태 코드 설정
         response.setStatus(status.value());
-        response.setContentType("application/json");
+        response.setContentType("application/json; charset=UTF-8");
 
         // ApiResult 생성
         ApiResult<?> apiResult = ApiResult.onFailure(ErrorStatus._UNAUTHORIZED.getCode(), message, null);

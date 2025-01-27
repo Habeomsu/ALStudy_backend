@@ -1,6 +1,8 @@
 package main.als.group.repository;
 
 import main.als.group.entity.Group;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +20,9 @@ public interface GroupRepository extends JpaRepository<Group,Long> {
     // 만료된 그룹 삭제
     @Query("SELECT g FROM Group g WHERE g.studyEndDate < :currentDate")
     List<Group> findExpiredGroups(@Param("currentDate") LocalDateTime currentDate);
+
+    // 모집 기간이 지나지 않은 그룹을 가져오는 쿼리
+    @Query("SELECT g FROM Group g WHERE g.deadline > :now")
+    Page<Group> findAllByDeadlineAfter(@Param("now") LocalDateTime now, Pageable pageable);
+
 }

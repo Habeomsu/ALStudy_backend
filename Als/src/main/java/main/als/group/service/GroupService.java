@@ -15,4 +15,5 @@ public interface GroupService {
     public void deleteExpiredGroups();
     public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto);
     public void deleteGroup(Long id,String username,String password);
+    public GroupResponseDto.AllGroupDto getGroup(Long GorupId);
 }

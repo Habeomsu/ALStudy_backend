@@ -86,6 +86,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupResponseDto.AllGroupDto getGroup(Long GroupId) {
+        Group group = groupRepository.findById(GroupId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUP));
+        return GroupConverter.toAllGroupDto(group);
+    }
+
+    @Override
     public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto) {
         String password = validPasswordDto.getPassword();
         Group group = groupRepository.findById(validPasswordDto.getId())
@@ -113,6 +120,8 @@ public class GroupServiceImpl implements GroupService {
 
         groupRepository.deleteById(id);
     }
+
+
 
     @Override
     @Transactional

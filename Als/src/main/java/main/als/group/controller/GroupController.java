@@ -34,6 +34,11 @@ public class GroupController {
         return ApiResult.onSuccess(groupService.getAllGroups(PagingConverter.toPagingDto(page, size, sort)));
     }
 
+    @GetMapping("/{groupId}")
+    public ApiResult<GroupResponseDto.AllGroupDto> getGroup(@PathVariable Long groupId) {
+        return ApiResult.onSuccess(groupService.getGroup(groupId));
+    }
+
     @PostMapping
     public ApiResult<?> create(@Valid @RequestBody GroupRequestDto.CreateGroupDto groupRequestDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
         String username = userDetails.getUsername();

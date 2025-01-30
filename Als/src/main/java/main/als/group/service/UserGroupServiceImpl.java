@@ -2,6 +2,7 @@ package main.als.group.service;
 
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
+import main.als.group.dto.UserGroupResponseDto;
 import main.als.group.entity.Group;
 import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
@@ -94,4 +95,14 @@ public class UserGroupServiceImpl implements UserGroupService {
 
         return UserConverter.toUserDtos(userGroupsPage);
     }
+
+    @Override
+    public void resignGroup(Long groupId, String username) {
+        UserGroup userGroup = userGroupRepository.findByGroupIdAndUserUsername(groupId,username)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_USERGROUP));
+
+        userGroupRepository.delete(userGroup);
+
+    }
 }
+

@@ -12,5 +12,5 @@ import java.util.List;
 public interface UserGroupService {
     public void joinUserGroup(Long groupId,String password,String username);
     public UserDto.SearchUsers getUsersByGroupId(Long groupId, PostPagingDto.PagingDto pagingDto);
-
+    public void resignGroup(Long groupId,String username);
 }

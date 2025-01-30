@@ -65,6 +65,16 @@ public class UserGroupController {
 
     }
 
+    @DeleteMapping("/{groupId}")
+    public ApiResult<?> resignGroup(@PathVariable("groupId") Long groupId,
+                                    @AuthenticationPrincipal CustomUserDetails userDetails){
+
+        String username = userDetails.getUsername();
+        userGroupService.resignGroup(groupId,username);
+        return ApiResult.onSuccess();
+
+    }
+
 
 
 }

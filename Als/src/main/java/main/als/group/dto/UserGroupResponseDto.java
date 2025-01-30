@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import main.als.group.entity.UserGroup;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserGroupResponseDto {
@@ -18,6 +19,7 @@ public class UserGroupResponseDto {
         private Long id;
         private String username;
         private Long groupId;
+        private LocalDateTime studyEndTime;
         private String groupName;
         private BigDecimal userDepositAmount;
 

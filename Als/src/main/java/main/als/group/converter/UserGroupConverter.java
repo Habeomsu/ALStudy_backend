@@ -17,6 +17,7 @@ public class UserGroupConverter {
                 .id(userGroup.getId())
                 .username(userGroup.getUser().getUsername())
                 .groupId(userGroup.getGroup().getId())
+                .studyEndTime(userGroup.getGroup().getStudyEndDate())
                 .groupName(userGroup.getGroup().getName())
                 .userDepositAmount(userGroup.getUserDepositAmount())
                 .build();

@@ -43,11 +43,13 @@ public class GroupProblemController {
     }
 
 
-    @PostMapping
-    public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody @Valid GroupProblemRequestDto.GroupProblemDto groupProblemDto) {
+    @PostMapping("/{groupId}")
+    public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                           @RequestBody @Valid GroupProblemRequestDto.GroupProblemDto groupProblemDto,
+                                           @PathVariable Long groupId) {
 
         String username = customUserDetails.getUsername();
-        groupProblemService.createGroupProblem(groupProblemDto, username);
+        groupProblemService.createGroupProblem(groupProblemDto, username,groupId);
         return ApiResult.onSuccess();
     }
 

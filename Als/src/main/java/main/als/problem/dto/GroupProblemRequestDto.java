@@ -23,9 +23,6 @@ public class GroupProblemRequestDto {
         @NotNull(message = "문제 번호는 필수입니다.")
         private Long problem_id;
 
-        @NotNull(message = "그룹 번호는 필수입니다.")
-        private Long group_id;
-
         @FutureOrPresent(message = "모집 기간은 오늘 이후여야 합니다.")
         private LocalDateTime deadline;
 

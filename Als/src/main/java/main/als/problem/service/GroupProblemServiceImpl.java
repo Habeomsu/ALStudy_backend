@@ -54,12 +54,12 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
     @Override
     @Transactional
-    public void createGroupProblem(GroupProblemRequestDto.GroupProblemDto groupProblemDto,String username) {
+    public void createGroupProblem(GroupProblemRequestDto.GroupProblemDto groupProblemDto,String username,Long groupId) {
 
         Problem problem = problemRepository.findById(groupProblemDto.getProblem_id())
                 .orElseThrow(()-> new GeneralException(ErrorStatus._NOT_FOUND_PROBLEM));
 
-        Group group = groupRepository.findById(groupProblemDto.getGroup_id())
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(()-> new GeneralException(ErrorStatus._NOT_FOUND_GROUP));
 
         String leader = group.getLeader();

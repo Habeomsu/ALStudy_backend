@@ -274,6 +274,25 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
     }
 
+    @Override
+    public void deleteGroupProblem(Long groupId, Long groupProblemId, String username) {
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        Group group = groupProblem.getGroup();
+
+        if (!group.getId().equals(groupId)) {
+            throw new GeneralException(ErrorStatus._NOT_MATCH_GROUP);
+        }
+
+        if(!group.getLeader().equals(username)){
+            throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
+        }
+
+        groupProblemRepository.delete(groupProblem);
+
+    }
 
 
 }

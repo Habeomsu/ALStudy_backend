@@ -1,6 +1,7 @@
 package main.als.problem.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import main.als.apiPayload.ApiResult;
 import main.als.page.PagingConverter;
 import main.als.problem.dto.GroupProblemRequestDto;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/groupproblem")
+@Slf4j
 public class GroupProblemController {
 
     private final GroupProblemService groupProblemService;
@@ -53,6 +55,16 @@ public class GroupProblemController {
         String username =UserDetails.getUsername();
         return ApiResult.onSuccess(groupProblemService.getDetailGroupProblem(groupId,groupProblemId,username));
     }
+
+    @DeleteMapping("/{groupId}/{groupProblemId}")
+    public ApiResult<?> DeleteGroupProblem(@PathVariable Long groupId,
+                                              @PathVariable Long groupProblemId,
+                                              @AuthenticationPrincipal CustomUserDetails UserDetails) {
+        String username =UserDetails.getUsername();
+        groupProblemService.deleteGroupProblem(groupId,groupProblemId,username);
+        return ApiResult.onSuccess();
+    }
+
 
 
     @PostMapping("/{groupId}")

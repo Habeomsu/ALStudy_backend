@@ -1,5 +1,6 @@
 package main.als.problem.repository;
 
+import jakarta.transaction.Transactional;
 import main.als.problem.entity.GroupProblem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +20,8 @@ public interface GroupProblemRepository extends JpaRepository<GroupProblem, Long
 
     @Query("SELECT gp FROM GroupProblem gp WHERE gp.group.id = :groupId AND gp.deadline >= :now")
     Page<GroupProblem> findByGroupIdAndDeadlineGreaterThanEqual(@Param("groupId") Long groupId, @Param("now") LocalDateTime now, Pageable pageable);
+
+    @Transactional
+    void delete(GroupProblem groupProblem);
 
 }

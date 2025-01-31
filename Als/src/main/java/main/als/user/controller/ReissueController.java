@@ -1,6 +1,7 @@
 package main.als.user.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,6 +61,10 @@ public class ReissueController {
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return ApiResult.onFailure(ErrorStatus._EXFIRED_REFRESH_TOKEN.getCode(),ErrorStatus._EXFIRED_REFRESH_TOKEN.getMessage(), null);
+        }catch (JwtException e) {
+            // 기타 JWT 관련 오류 처리
+            return ApiResult.onFailure(ErrorStatus._INVALID_REFRESH_TOKEN.getCode(),ErrorStatus._INVALID_REFRESH_TOKEN.getMessage(), null);
+
         }
 
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
@@ -72,6 +77,12 @@ public class ReissueController {
             return ApiResult.onFailure(ErrorStatus._INVALID_REFRESH_TOKEN.getCode(),ErrorStatus._INVALID_REFRESH_TOKEN.getMessage(),null);
         }
 
+        Boolean isExist = refreshRepository.existsByRefresh(refresh);
+        if (!isExist) {
+            //response body
+            return ApiResult.onFailure(ErrorStatus._NOTFOUND_REFRESH_TOKEN.getCode(),ErrorStatus._NOTFOUND_REFRESH_TOKEN.getMessage(),null);
+        }
+
         String username = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
 
@@ -80,15 +91,7 @@ public class ReissueController {
         String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
         refreshRepository.deleteByUsername(username);
-        // 새 리프레시 토큰 추가
-        try {
-            addRefresh(username, newRefresh, 86400000L);
-        } catch (StaleObjectStateException e) {
-            // 오류 발생 시 적절한 응답 처리
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
-            return ApiResult.onFailure(ErrorStatus._STAL_OBJECT_STATE.getCode(),ErrorStatus._STAL_OBJECT_STATE.getMessage(), null);
-        }
-
+        addRefresh(username, newRefresh, 86400000L);
 
         //response
         response.setHeader("access", newAccess);

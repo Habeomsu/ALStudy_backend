@@ -34,6 +34,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _NOT_FOUND_GROUP(HttpStatus.NOT_FOUND,"GROUP400_2","그룹이 존재하지 않습니다."),
     _NOT_MATCH_GROUPPASSWORD(HttpStatus.BAD_REQUEST,"GROUP400_3","그룹 비밀번호가 일치하지 않습니다."),
     _NOT_MATCH_LEADER(HttpStatus.BAD_REQUEST,"GROUP400_4","리더가 일치하지 않습니다."),
+    _NOT_MATCH_GROUP(HttpStatus.BAD_REQUEST,"GROUP400_5","그룹이 일치하지 않습니다."),
 
     //usergroup
     _DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,"USERGROUP400_1","모집기간이 지났습니다."),

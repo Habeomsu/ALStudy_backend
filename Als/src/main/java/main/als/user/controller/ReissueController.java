@@ -11,6 +11,7 @@ import main.als.apiPayload.code.status.SuccessStatus;
 import main.als.user.entity.Refresh;
 import main.als.user.repository.RefreshRepository;
 import main.als.user.security.JWTUtil;
+import org.hibernate.StaleObjectStateException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -79,7 +80,14 @@ public class ReissueController {
         String newRefresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
         refreshRepository.deleteByUsername(username);
-        addRefresh(username, newRefresh, 86400000L);
+        // 새 리프레시 토큰 추가
+        try {
+            addRefresh(username, newRefresh, 86400000L);
+        } catch (StaleObjectStateException e) {
+            // 오류 발생 시 적절한 응답 처리
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            return ApiResult.onFailure(ErrorStatus._STAL_OBJECT_STATE.getCode(),ErrorStatus._STAL_OBJECT_STATE.getMessage(), null);
+        }
 
 
         //response

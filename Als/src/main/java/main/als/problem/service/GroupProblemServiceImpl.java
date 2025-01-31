@@ -137,6 +137,54 @@ public class GroupProblemServiceImpl implements GroupProblemService {
     }
 
     @Override
+    public GroupProblemResponseDto.SearchGroupProblem getTodayGroupProblems(Long groupId, String username, PostPagingDto.PagingDto pagingDto) {
+
+        if (!groupRepository.existsById(groupId)) {
+            throw new GeneralException(ErrorStatus._NOT_FOUND_GROUP);
+        }
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"createdAt");
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        // 현재 날짜와 시간
+        LocalDateTime now = LocalDateTime.now();
+
+        // 현재 시간보다 마감일이 큰 문제를 필터링합니다.
+        Page<GroupProblem> groupProblems = groupProblemRepository.findByGroupIdAndDeadlineGreaterThanEqual(
+                groupId,
+                now, // 현재 시간
+                pageable
+        );
+
+        List<Submission> userSubmissions = submissionRepository.findByUserUsername(username);
+
+        // submission 을 사용자별로 가지고온다음 그룹 아이디 : [상태들] -> 그룹 아이디 : 상태로 만듬
+        Map<Long, SubmissionStatus> submissionStatusMap = userSubmissions.stream()
+                .collect(Collectors.groupingBy(
+                        submission -> submission.getGroupProblem().getId(),
+                        Collectors.mapping(Submission::getStatus, Collectors.toList())
+                ))
+                .entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            List<SubmissionStatus> statuses = entry.getValue(); // entry의 값을 가져옴
+
+                            if (statuses.contains(SubmissionStatus.SUCCEEDED)) {
+                                return SubmissionStatus.SUCCEEDED; // 성공이 있으면 성공으로 설정
+                            } else if (statuses.contains(SubmissionStatus.FAILED)) {
+                                return SubmissionStatus.FAILED; // 실패가 있으면 실패로 설정
+                            } else {
+                                return SubmissionStatus.PENDING; // 제출이 없거나 모두 대기 상태면 대기
+                            }
+                        }
+                ));
+
+
+        return GroupProblemConverter.toSearchGroupProblemDto(groupProblems, submissionStatusMap);
+    }
+
+    @Override
     public GroupProblemResponseDto.DetailGroupProblem getDetailGroupProblem(Long groupId,Long groupProblemId,String username) {
         GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
                 .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));

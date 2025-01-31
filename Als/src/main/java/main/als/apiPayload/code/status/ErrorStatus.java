@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _EXFIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"JWT400_4","만료된 refresh 토큰입니다."),
     _INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"JWT400_5","유효하지 않는 refresh 토큰입니다."),
     _NOFOUND_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"JWT400_6","DB에 refresh 토큰이 존재하지 않습니다."),
+    _STAL_OBJECT_STATE(HttpStatus.UNAUTHORIZED,"JWT400_7","트렌젝션 오류 입니다."),
 
     //username
     _EXIST_USERNAME(HttpStatus.BAD_REQUEST,"USER400_1","아이디가 존재합니다."),

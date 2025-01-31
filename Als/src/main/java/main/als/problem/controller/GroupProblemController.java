@@ -34,6 +34,18 @@ public class GroupProblemController {
         return ApiResult.onSuccess(groupProblemService.getGroupProblems(groupId,username, PagingConverter.toPagingDto(page,size,sort)));
     }
 
+    // 오늘의 문제를 가지고 오는 컨트롤러
+    @GetMapping("/{groupId}/todayProblem")
+    public ApiResult<GroupProblemResponseDto.SearchGroupProblem> getTodayGroupProblem(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                                                 @PathVariable Long groupId,
+                                                                                 @RequestParam(defaultValue = "0") int page,
+                                                                                 @RequestParam(defaultValue = "10") int size,
+                                                                                 @RequestParam(defaultValue = "desc") String sort
+    ) {
+        String username = userDetails.getUsername();
+        return ApiResult.onSuccess(groupProblemService.getTodayGroupProblems(groupId,username, PagingConverter.toPagingDto(page,size,sort)));
+    }
+
     @GetMapping("/{groupId}/{groupProblemId}")
     public ApiResult<GroupProblemResponseDto.DetailGroupProblem> getDetailGroupProblem(@PathVariable Long groupId,
                                                                                        @PathVariable Long groupProblemId,

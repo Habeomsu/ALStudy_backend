@@ -53,11 +53,14 @@ public class CustomLogoutFilter extends GenericFilterBean {
         // 쿠키에서 refresh 토큰 가져오기
         String refresh = null;
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refresh")) {
-
-                refresh = cookie.getValue();
+        // 쿠키가 null인지 확인
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refresh")) {
+                    refresh = cookie.getValue();
+                    break; // 쿠키를 찾으면 루프 종료
+                }
             }
         }
 

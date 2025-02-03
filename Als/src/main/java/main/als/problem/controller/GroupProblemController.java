@@ -66,7 +66,6 @@ public class GroupProblemController {
     }
 
 
-
     @PostMapping("/{groupId}")
     public ApiResult<?> createGroupProblem(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                            @RequestBody @Valid GroupProblemRequestDto.GroupProblemDto groupProblemDto,
@@ -74,6 +73,17 @@ public class GroupProblemController {
 
         String username = customUserDetails.getUsername();
         groupProblemService.createGroupProblem(groupProblemDto, username,groupId);
+        return ApiResult.onSuccess();
+    }
+
+    @PutMapping("/{groupId}/{groupProblemId}")
+    public ApiResult<?> UpdateGroupProblem(@PathVariable Long groupId,
+                                           @PathVariable Long groupProblemId,
+                                           @AuthenticationPrincipal CustomUserDetails UserDetails,
+                                           @RequestBody @Valid GroupProblemRequestDto.UpdateGroupProblemDto updateGroupProblemDto){
+
+        String username=UserDetails.getUsername();
+        groupProblemService.updateGroupProblem(updateGroupProblemDto,groupId,groupProblemId,username);
         return ApiResult.onSuccess();
     }
 

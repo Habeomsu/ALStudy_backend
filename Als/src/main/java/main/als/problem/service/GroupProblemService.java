@@ -13,4 +13,5 @@ public interface GroupProblemService {
     GroupProblemResponseDto.DetailGroupProblem getDetailGroupProblem(Long groupId,Long groupProblemId,String username);
     void checkDeadlines();
     void deleteGroupProblem(Long groupId,Long groupProblemId, String username);
+    void updateGroupProblem(GroupProblemRequestDto.UpdateGroupProblemDto updateGroupProblemDto,Long groupId,Long groupProblemId, String username);
 }

@@ -54,6 +54,8 @@ public enum ErrorStatus implements BaseErrorCode {
     _DEADLINE_NOT_PASSED(HttpStatus.BAD_REQUEST,"GROUPPROBLEM400_1","모집기간이 지나야 문제생성이 가능합니다."),
     _NOT_FOUND_GROUPPROBLEM(HttpStatus.NOT_FOUND,"GROUPPROBLEM400_2","그룹문제가 존재하지 않습니다."),
     _DUPLICATE_GROUP_PROBLEM(HttpStatus.BAD_REQUEST,"GROUPPROBLEM400_3","중복된 문제입니다."),
+    _DEADLINE_EXPIRED(HttpStatus.BAD_REQUEST,"GROUPPROBLEM400_4","마감일이 지난 문제입니다."),
+
 
     // file
     _FILE_NOT_FOUND(HttpStatus.NOT_FOUND,"FILE400_1","파일이 없습니다."),

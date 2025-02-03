@@ -6,6 +6,7 @@ import main.als.problem.entity.SubmissionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class GroupProblemResponseDto {
@@ -55,6 +56,8 @@ public class GroupProblemResponseDto {
         private String exampleOutput;
         private BigDecimal deductionAmount;
         private SubmissionStatus status;
+        private LocalDateTime deadline;
+
     }
 
 

@@ -32,4 +32,19 @@ public class GroupProblemRequestDto {
 
     }
 
+    @Getter
+    @Builder
+    @RequiredArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateGroupProblemDto{
+
+        @FutureOrPresent(message = "모집 기간은 오늘 이후여야 합니다.")
+        private LocalDateTime deadline;
+
+        @NotNull(message = "차감액은 필수입니다.")
+        private BigDecimal deductionAmount;
+
+
+    }
+
 }

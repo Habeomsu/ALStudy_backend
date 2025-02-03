@@ -60,6 +60,7 @@ public class GroupProblemConverter {
                 .exampleOutput(groupProblem.getProblem().getExampleOutput())
                 .deductionAmount(groupProblem.getDeductionAmount())
                 .status(status)
+                .deadline(groupProblem.getDeadline())
                 .build();
     }
 

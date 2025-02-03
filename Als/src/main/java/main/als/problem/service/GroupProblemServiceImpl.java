@@ -294,5 +294,37 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
     }
 
+    @Override
+    public void updateGroupProblem(GroupProblemRequestDto.UpdateGroupProblemDto updateGroupProblemDto, Long groupId, Long groupProblemId, String username) {
+
+        GroupProblem groupProblem = groupProblemRepository.findById(groupProblemId)
+                .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_GROUPPROBLEM));
+
+        Group group = groupProblem.getGroup();
+
+        //그룹 일치 검사
+        if (!group.getId().equals(groupId)) {
+            throw new GeneralException(ErrorStatus._NOT_MATCH_GROUP);
+        }
+
+        //리더 검사
+        if(!group.getLeader().equals(username)){
+            throw new GeneralException(ErrorStatus._NOT_MATCH_LEADER);
+        }
+
+        // 마감일 검사
+        if (groupProblem.getDeadline().isBefore(LocalDateTime.now())) {
+            throw new GeneralException(ErrorStatus._DEADLINE_EXPIRED);
+        }
+
+        groupProblem.setDeadline(updateGroupProblemDto.getDeadline());
+        groupProblem.setDeductionAmount(updateGroupProblemDto.getDeductionAmount());
+
+        groupProblemRepository.save(groupProblem);
+
+
+    }
+
+
 
 }

@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.Collections;
 
@@ -64,6 +65,14 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
                         .requestMatchers("/login","/join").permitAll()
                         .requestMatchers("/reissue").permitAll()
+                        // GET 요청은 누구나 가능
+                        .requestMatchers(HttpMethod.GET, "/problems/**").permitAll()
+
+                        // POST, PUT, DELETE 요청은 ROLE_ADMIN만 가능
+                        .requestMatchers(HttpMethod.POST, "/problems/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/problems/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/problems/**").hasRole("ADMIN")
+                        .requestMatchers("/testcase/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
 

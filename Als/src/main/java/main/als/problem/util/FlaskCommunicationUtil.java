@@ -2,6 +2,8 @@ package main.als.problem.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import main.als.apiPayload.code.status.ErrorStatus;
+import main.als.apiPayload.exception.GeneralException;
 import main.als.problem.entity.TestCase;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
@@ -10,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,8 +55,14 @@ public class FlaskCommunicationUtil {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-        // Flask 서버에 POST 요청
-        return restTemplate.postForEntity(FLASK_URL, requestEntity, Map.class);
+        try {
+            // Flask 서버에 POST 요청
+            return restTemplate.postForEntity(FLASK_URL, requestEntity, Map.class);
+        } catch (ResourceAccessException e) {
+            throw new GeneralException(ErrorStatus._FLASK_SERVER_ERROR);
+        } catch (HttpClientErrorException e) {
+            throw new GeneralException(ErrorStatus._FLASK_SERVER_ERROR);
+        }
     }
 
     private static File createTempFile(MultipartFile file) throws IOException {

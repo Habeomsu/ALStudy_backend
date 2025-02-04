@@ -65,7 +65,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _NOT_FOUND_SUBMISSION(HttpStatus.NOT_FOUND,"SUBMISSION400_1","제출내역이 없습니다."),
     _JSON_PROCESSING_ERROR(HttpStatus.BAD_REQUEST,"SUBMISSION400_2","테스트케이스 변환 오류입니다."),
     _SUBMISSION_DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,"SUBMISSION400_3","제출 기한이 지났습니다."),
-    _NO_SUCCEEDED_SUBMISSION(HttpStatus.BAD_REQUEST,"SUBMISSION400_4","성공 내역이 존재하지 않습니다."),
+    _NO_SUCCEEDED_SUBMISSION(HttpStatus.BAD_REQUEST,"SUBMISSION400_4","문제를 풀지 못하였습니다."),
 
     // resttemplate 오류
     _FLASK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"COMMUNICATION400_1","플라스크 통신 오류입니다."),

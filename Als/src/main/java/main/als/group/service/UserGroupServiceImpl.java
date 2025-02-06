@@ -70,7 +70,10 @@ public class UserGroupServiceImpl implements UserGroupService {
         UserGroup userGroup = UserGroup.builder()
                 .user(user)
                 .group(group)
-                .userDepositAmount(group.getDepositAmount())
+                .userDepositAmount(BigDecimal.ZERO)
+                .refunded(false)
+                .charged(false)
+                .paymentKey(null)
                 .build();
 
         user.getUserGroups().add(userGroup);

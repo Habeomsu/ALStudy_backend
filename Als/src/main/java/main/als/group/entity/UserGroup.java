@@ -30,4 +30,16 @@ public class UserGroup {
     @Column(name = "user_deposit_amount", precision = 10, scale = 2)
     private BigDecimal userDepositAmount;
 
+    //환급 여부
+    @Column(name = "refunded", nullable = false)
+    private boolean refunded;
+
+    //충전 여부
+    @Column(name = "charged", nullable = false)
+    private boolean charged;
+
+    @Column(name = "payment_key")
+    private String paymentKey;
+
+
 }

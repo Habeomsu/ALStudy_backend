@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -63,7 +64,10 @@ public class GroupServiceImpl implements GroupService {
         UserGroup userGroup = UserGroup.builder()
                 .user(leader)
                 .group(savedGroup)
-                .userDepositAmount(savedGroup.getDepositAmount())
+                .userDepositAmount(BigDecimal.ZERO)
+                .refunded(false)
+                .charged(false)
+                .paymentKey(null)
                 .build();
 
         userGroupRepository.save(userGroup);

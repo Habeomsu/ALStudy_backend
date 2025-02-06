@@ -34,6 +34,9 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private String customerId;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default //builder사용시 null값 초기화 방지
     private List<UserGroup> userGroups = new ArrayList<>(); // 그룹과의 관계

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class JoinService {
@@ -32,10 +33,13 @@ public class JoinService {
             throw new GeneralException(ErrorStatus._EXIST_USERNAME);
         }
 
+        String customerId = UUID.randomUUID().toString();
+
         User data = User.builder()
                     .username(username)
                     .password(bCryptPasswordEncoder.encode(password))
                     .role(Role.ROLE_USER)
+                    .customerId(customerId)
                     .build();
 
         userRepository.save(data);

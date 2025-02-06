@@ -69,6 +69,11 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // resttemplate 오류
     _FLASK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"COMMUNICATION400_1","플라스크 통신 오류입니다."),
+
+    // payment 오류
+    _TOSS_CONFIRM_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_1","결제 실패입니다."),
+    _TOSS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_2","결제 정보 저장 에러입니다."),
+
     ;
 
     private final HttpStatus httpStatus;

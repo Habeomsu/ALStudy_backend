@@ -21,10 +21,10 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String paymentKey;
-    private BigDecimal amount;
-    private LocalDateTime createdAt;
-    private LocalDateTime refundedAt;
+    private String totalAmount;
+    private String requestedAt;
 
     @Column(nullable = false)
     private String orderId;

@@ -78,6 +78,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //UserDetails
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
+        String customerId =customUserDetails.getCustomerId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -94,7 +95,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(createCookie("refresh", refresh));
 
         // ApiResult 생성
-        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK, new LoginResponseDto.LoginResponse(username,role));
+        ApiResult<?> apiResult = ApiResult.onSuccess(SuccessStatus._OK, new LoginResponseDto.LoginResponse(username,role,customerId));
 
         JsonResponseUtil.sendJsonResponse(response, HttpServletResponse.SC_OK, apiResult);
 

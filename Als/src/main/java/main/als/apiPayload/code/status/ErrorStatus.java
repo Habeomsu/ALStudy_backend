@@ -73,7 +73,7 @@ public enum ErrorStatus implements BaseErrorCode {
     // payment 오류
     _TOSS_CONFIRM_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_1","결제 실패입니다."),
     _TOSS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_2","결제 정보 저장 에러입니다."),
-
+    _ALREADY_CHARGED(HttpStatus.BAD_REQUEST,"TOSS400_3","이미 충전을 하셨습니다."),
     ;
 
     private final HttpStatus httpStatus;

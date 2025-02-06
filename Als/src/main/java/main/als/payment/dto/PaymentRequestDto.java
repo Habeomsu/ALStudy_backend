@@ -15,6 +15,8 @@ public class PaymentRequestDto {
         String amount;
         @NotNull
         String paymentKey;
+        @NotNull
+        Long userGroupId;
 
     }
 }

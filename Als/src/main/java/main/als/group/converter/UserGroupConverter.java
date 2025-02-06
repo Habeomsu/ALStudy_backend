@@ -22,6 +22,7 @@ public class UserGroupConverter {
                 .userDepositAmount(userGroup.getUserDepositAmount())
                 .refunded(userGroup.isRefunded())
                 .charged(userGroup.isCharged())
+                .groupDepositAmount(userGroup.getGroup().getDepositAmount())
                 .build();
     }
 

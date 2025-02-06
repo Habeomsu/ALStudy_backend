@@ -24,8 +24,7 @@ public class UserGroupResponseDto {
         private BigDecimal userDepositAmount;
         private boolean refunded;
         private boolean charged;
-
-
+        private BigDecimal groupDepositAmount;
     }
 
     @Builder

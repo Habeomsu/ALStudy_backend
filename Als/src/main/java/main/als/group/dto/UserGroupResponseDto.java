@@ -22,6 +22,9 @@ public class UserGroupResponseDto {
         private LocalDateTime studyEndTime;
         private String groupName;
         private BigDecimal userDepositAmount;
+        private boolean refunded;
+        private boolean charged;
+
 
     }
 

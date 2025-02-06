@@ -20,6 +20,8 @@ public class UserGroupConverter {
                 .studyEndTime(userGroup.getGroup().getStudyEndDate())
                 .groupName(userGroup.getGroup().getName())
                 .userDepositAmount(userGroup.getUserDepositAmount())
+                .refunded(userGroup.isRefunded())
+                .charged(userGroup.isCharged())
                 .build();
     }
 

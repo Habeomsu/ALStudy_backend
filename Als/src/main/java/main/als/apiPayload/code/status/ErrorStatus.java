@@ -71,9 +71,12 @@ public enum ErrorStatus implements BaseErrorCode {
     _FLASK_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"COMMUNICATION400_1","플라스크 통신 오류입니다."),
 
     // payment 오류
-    _TOSS_CONFIRM_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_1","결제 실패입니다."),
-    _TOSS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"TOSS400_2","결제 정보 저장 에러입니다."),
-    _ALREADY_CHARGED(HttpStatus.BAD_REQUEST,"TOSS400_3","이미 충전을 하셨습니다."),
+    _TOSS_CONFIRM_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"PAYMENT400_1","결제 실패입니다."),
+    _TOSS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"PAYMENT400_2","결제 정보 저장 에러입니다."),
+    _ALREADY_CHARGED(HttpStatus.BAD_REQUEST,"PAYMENT400_3","이미 충전을 하셨습니다."),
+    _PAYMENT_KEY_NOT_FOUND(HttpStatus.NOT_FOUND,"PAYMENT400_4","환급의 필요한 payment KEY가 없습니다."),
+    _NO_AVAILABLE_DEPOSIT(HttpStatus.BAD_REQUEST,"PAYMENT400_5","예치금이 없습니다."),
+    _REFUND_FAILED(HttpStatus.BAD_REQUEST,"PAYMENT400_6","토스페이먼츠 api 오류"),
     ;
 
     private final HttpStatus httpStatus;

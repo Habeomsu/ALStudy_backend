@@ -11,6 +11,7 @@ import main.als.group.service.UserGroupService;
 import main.als.payment.dto.PaymentRequestDto;
 import main.als.payment.entity.Payment;
 import main.als.payment.repository.PaymentRepository;
+import main.als.payment.util.PaymentUtil;
 import org.glassfish.hk2.api.Self;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONObject;
@@ -31,7 +32,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final UserGroupRepository userGroupRepository;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository,UserGroupRepository userGroupRepository) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository,UserGroupRepository userGroupRepository
+                              ) {
         this.paymentRepository = paymentRepository;
         this.userGroupRepository = userGroupRepository;
     }
@@ -53,61 +55,70 @@ public class PaymentServiceImpl implements PaymentService {
             throw new GeneralException(ErrorStatus._ALREADY_CHARGED);
         }
 
-        JSONObject obj = new JSONObject();
-        obj.put("orderId", orderId);
-        obj.put("amount", amount);
-        obj.put("paymentKey", paymentKey);
+        // 결제 확인 요청
+        JSONObject jsonResponse = PaymentUtil.confirmPayment(orderId, amount, paymentKey);
 
-        String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
-        // 인증 정보 설정
-        Base64.Encoder encoder = Base64.getEncoder();
-        byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
-        String authorizations = "Basic " + new String(encodedBytes);
-
-        try {
-            URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Authorization", authorizations);
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-
-            // 요청 본문 전송
-            OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(obj.toString().getBytes(StandardCharsets.UTF_8));
-
-            int code = connection.getResponseCode();
-            InputStream responseStream = (code == 200) ? connection.getInputStream() : connection.getErrorStream();
-
-            // 응답 처리
-            Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
-            JSONObject jsonObject = (JSONObject) parser.parse(reader);
-            responseStream.close();
-
-            // 응답 데이터 로그
-            log.info("Received response from Toss Payments API: {}", jsonObject.toJSONString());
-
-
-            // 결제 정보를 저장
-            Payment payment = Payment.builder()
-                    .paymentKey(jsonObject.get("paymentKey").toString())
-                    .orderId(jsonObject.get("orderId").toString())
-                    .requestedAt(jsonObject.get("requestedAt").toString())
-                    .totalAmount(jsonObject.get("totalAmount").toString())
-                    .build();
-
-            paymentRepository.save(payment);
-
-            userGroup.setUserDepositAmount(new BigDecimal(payment.getTotalAmount()));
-            userGroup.setCharged(true);
-            userGroup.setPaymentKey(payment.getPaymentKey());
-
-            userGroupRepository.save(userGroup);
-
-
-        } catch (IOException | ParseException e) {
+        if (jsonResponse == null) {
             throw new GeneralException(ErrorStatus._TOSS_CONFIRM_FAIL);
         }
+
+        // 결제 정보를 저장
+        Payment payment = Payment.builder()
+                .paymentKey(jsonResponse.get("paymentKey").toString())
+                .orderId(jsonResponse.get("orderId").toString())
+                .requestedAt(jsonResponse.get("requestedAt").toString())
+                .totalAmount(jsonResponse.get("totalAmount").toString())
+                .build();
+
+        paymentRepository.save(payment);
+
+        userGroup.setUserDepositAmount(new BigDecimal(payment.getTotalAmount()));
+        userGroup.setCharged(true);
+        userGroup.setPaymentKey(payment.getPaymentKey());
+
+        userGroupRepository.save(userGroup);
+
+
+    }
+
+    @Override
+    public void refundPayment(String username, Long usergroupId) {
+
+        UserGroup userGroup = userGroupRepository.findById(usergroupId)
+                .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_USERGROUP));
+
+        if (!userGroup.getUser().getUsername().equals(username)) {
+            throw new GeneralException(ErrorStatus._NOT_IN_USERGROUP);
+        }
+
+        String paymentKey = userGroup.getPaymentKey();
+        if (paymentKey == null || paymentKey.isEmpty()) {
+            throw new GeneralException(ErrorStatus._PAYMENT_KEY_NOT_FOUND);
+        }
+
+        BigDecimal refundAmount = userGroup.getUserDepositAmount();
+        if (refundAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new GeneralException(ErrorStatus._NO_AVAILABLE_DEPOSIT);
+        }
+
+        JSONObject refundResponse = PaymentUtil.processRefund(paymentKey, refundAmount);
+
+        // 환급 응답 콘솔 출력
+        log.info("환급 응답: {}", refundResponse);
+
+        // 환급 상태 확인
+        String status = (String) refundResponse.get("status");
+        if (status == null || !status.equals("CANCELED")) {
+            String errorMessage = (String) refundResponse.get("message");
+            log.error("환급 요청 실패: {}", errorMessage != null ? errorMessage : "환급 요청에 실패했습니다.");
+            throw new GeneralException(ErrorStatus._REFUND_FAILED);
+        }
+
+        userGroup.setUserDepositAmount(BigDecimal.ZERO); // 환급 후 예치금을 0으로 설정
+        userGroup.setCharged(false); // 환급 후 charged 상태를 false로 설정
+
+        userGroupRepository.save(userGroup);
+
 
 
     }

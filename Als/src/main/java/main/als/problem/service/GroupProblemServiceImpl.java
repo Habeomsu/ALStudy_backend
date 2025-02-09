@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -217,17 +218,16 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
     @Transactional
     @Override
-    public void checkDeadlines(){
+    public void checkDeadlines() {
         LocalDateTime currentTime = LocalDateTime.now();
         List<GroupProblem> problems = groupProblemRepository.findAll();
 
-        for(GroupProblem groupProblem : problems){
-            if(currentTime.isAfter(groupProblem.getDeadline()) &&  groupProblem.getDeduct() == Deduct.FALSE){
+        for (GroupProblem groupProblem : problems) {
+            if (currentTime.isAfter(groupProblem.getDeadline()) && groupProblem.getDeduct() == Deduct.FALSE) {
 
                 Map<Long, List<Submission>> submissionsByUser = groupProblem.getSubmissions().stream()
                         .collect(Collectors.groupingBy(submission -> submission.getUser().getId()));
 
-                // 그룹의 모든 사용자 목록을 가져와서 제출 여부 확인
                 List<UserGroup> userGroups = userGroupRepository.findByGroupId(groupProblem.getGroup().getId());
 
                 for (UserGroup userGroup : userGroups) {
@@ -236,13 +236,17 @@ public class GroupProblemServiceImpl implements GroupProblemService {
                     // 제출이 없는 경우
                     if (userSubmissions == null || userSubmissions.isEmpty()) {
                         // 금액 차감 로직
-                        // 로그 출력
+                        if (userGroup.getUserDepositAmount().compareTo(groupProblem.getDeductionAmount()) < 0) {
+                            // 예치금이 부족한 경우 0으로 설정
+                            userGroup.setUserDepositAmount(BigDecimal.ZERO);
+                        } else {
+                            userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
+                        }
+                        userGroupRepository.save(userGroup); // 상태 업데이트
                         log.info("User {} has been deducted amount {} due to no submission for group problem ID {}.",
                                 userGroup.getUser().getUsername(),
                                 groupProblem.getDeductionAmount(),
                                 groupProblem.getId());
-                        userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
-                        userGroupRepository.save(userGroup); // 상태 업데이트
                     } else {
                         // 사용자 제출 중 성공적인 제출이 있는지 확인
                         boolean hasSuccessfulSubmission = userSubmissions.stream()
@@ -250,10 +254,13 @@ public class GroupProblemServiceImpl implements GroupProblemService {
 
                         // 성공적인 제출이 없는 경우에만 금액 차감
                         if (!hasSuccessfulSubmission) {
-                            // 금액 차감 로직
-                            userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
+                            if (userGroup.getUserDepositAmount().compareTo(groupProblem.getDeductionAmount()) < 0) {
+                                // 예치금이 부족한 경우 0으로 설정
+                                userGroup.setUserDepositAmount(BigDecimal.ZERO);
+                            } else {
+                                userGroup.setUserDepositAmount(userGroup.getUserDepositAmount().subtract(groupProblem.getDeductionAmount())); // 금액 차감
+                            }
                             userGroupRepository.save(userGroup); // 상태 업데이트
-                            // 로그 출력
                             log.info("User {} has been deducted amount {} due to no successful submission for group problem ID {}.",
                                     userGroup.getUser().getUsername(),
                                     groupProblem.getDeductionAmount(),
@@ -264,15 +271,10 @@ public class GroupProblemServiceImpl implements GroupProblemService {
                 // 금액 차감 완료 후 상태 업데이트
                 groupProblem.setDeduct(Deduct.TRUE);  // 금액 차감 여부 업데이트
                 groupProblemRepository.save(groupProblem); // 상태 업데이트
-
             }
-
-
-
         }
-
-
     }
+
 
     @Override
     public void deleteGroupProblem(Long groupId, Long groupProblemId, String username) {

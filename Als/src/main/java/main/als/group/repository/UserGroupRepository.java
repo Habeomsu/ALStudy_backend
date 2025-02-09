@@ -17,5 +17,7 @@ public interface UserGroupRepository extends JpaRepository<UserGroup,Long> {
     boolean existsByGroupIdAndUserUsername(Long groupId, String username);
     Optional<UserGroup> findByGroupIdAndUserUsername(Long groupId, String username);
     Optional<UserGroup> findById(Long userGroupId);
+    List<UserGroup> findByChargedFalse();
 }
+
 

@@ -1,5 +1,7 @@
 package main.als.group.service;
 
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.group.dto.UserGroupResponseDto;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserGroupServiceImpl implements UserGroupService {
 
     private final GroupRepository groupRepository;
@@ -106,6 +109,20 @@ public class UserGroupServiceImpl implements UserGroupService {
 
         userGroupRepository.delete(userGroup);
 
+    }
+
+    @Transactional
+    public void checkCharged(){
+        List<UserGroup> userGroups = userGroupRepository.findByChargedFalse();
+        LocalDateTime now = LocalDateTime.now();
+        for (UserGroup userGroup : userGroups) {
+            // 모집 마감일 확인
+            if (userGroup.getGroup().getDeadline().isBefore(now)) {
+                // 모집 기간이 지나면 그룹에서 탈퇴 처리
+                userGroupRepository.delete(userGroup); // 그룹에서 탈퇴
+                log.info("User {} has been removed from the group due to expired recruitment period.", userGroup.getUser().getUsername());
+            }
+        }
     }
 }
 

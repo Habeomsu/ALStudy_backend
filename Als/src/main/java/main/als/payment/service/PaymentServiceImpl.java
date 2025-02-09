@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 @Service
@@ -82,9 +83,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void refundPayment(String username, Long usergroupId) {
+    public void refundPayment(String username, Long userGroupId) {
 
-        UserGroup userGroup = userGroupRepository.findById(usergroupId)
+        UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus._NOT_FOUND_USERGROUP));
 
         if (!userGroup.getUser().getUsername().equals(username)) {
@@ -101,6 +102,12 @@ public class PaymentServiceImpl implements PaymentService {
             throw new GeneralException(ErrorStatus._NO_AVAILABLE_DEPOSIT);
         }
 
+        LocalDateTime now = LocalDateTime.now();
+
+        if (userGroup.getGroup().getStudyEndDate().isAfter(now)) {
+            refundAmount = refundAmount.multiply(BigDecimal.valueOf(0.5)); // 50% 환급
+        }
+
         JSONObject refundResponse = PaymentUtil.processRefund(paymentKey, refundAmount);
 
         // 환급 응답 콘솔 출력
@@ -108,7 +115,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         // 환급 상태 확인
         String status = (String) refundResponse.get("status");
-        if (status == null || !status.equals("CANCELED")) {
+        if (status == null || (!status.equals("CANCELED") && !status.equals("PARTIAL_CANCELED"))) {
             String errorMessage = (String) refundResponse.get("message");
             log.error("환급 요청 실패: {}", errorMessage != null ? errorMessage : "환급 요청에 실패했습니다.");
             throw new GeneralException(ErrorStatus._REFUND_FAILED);

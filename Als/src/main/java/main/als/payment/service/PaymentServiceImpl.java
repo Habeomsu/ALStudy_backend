@@ -122,7 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         userGroup.setUserDepositAmount(BigDecimal.ZERO); // 환급 후 예치금을 0으로 설정
-        userGroup.setCharged(false); // 환급 후 charged 상태를 false로 설정
+        userGroup.setRefunded(true); // 환급 후 charged 상태를 false로 설정
 
         userGroupRepository.save(userGroup);
 

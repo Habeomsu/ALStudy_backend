@@ -107,6 +107,11 @@ public class UserGroupServiceImpl implements UserGroupService {
         UserGroup userGroup = userGroupRepository.findByGroupIdAndUserUsername(groupId,username)
                 .orElseThrow(()->new GeneralException(ErrorStatus._NOT_FOUND_USERGROUP));
 
+        //리더인 경우 그룹 탈퇴 x
+//        String leader = userGroup.getGroup().getLeader();
+//        if (leader.equals(username)) {
+//            throw new GeneralException(ErrorStatus._LEADER_NOT_RESIGN);
+//        }
         userGroupRepository.delete(userGroup);
 
     }

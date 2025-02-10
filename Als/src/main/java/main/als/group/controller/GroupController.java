@@ -64,7 +64,7 @@ public class GroupController {
     public ApiResult<?> createWithPayment(@RequestBody GroupRequestDto.CreateWithPaymentDto createWithPaymentDto,
                                           @AuthenticationPrincipal CustomUserDetails userDetails) {
         String username = userDetails.getUsername();
-        Group group = groupService.createGroupWithPayment(createWithPaymentDto,username);
+        groupService.createGroupWithPayment(createWithPaymentDto,username);
         return ApiResult.onSuccess();
     }
 

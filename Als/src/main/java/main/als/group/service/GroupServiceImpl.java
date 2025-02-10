@@ -156,7 +156,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public Group createGroupWithPayment(GroupRequestDto.CreateWithPaymentDto createWithPaymentDto, String username) {
+    public void createGroupWithPayment(GroupRequestDto.CreateWithPaymentDto createWithPaymentDto, String username) {
 
         User leader = userRepository.findByUsername(username);
         if (leader == null) {
@@ -189,22 +189,30 @@ public class GroupServiceImpl implements GroupService {
                 .totalAmount(jsonResponse.get("totalAmount").toString())
                 .build();
 
-        paymentRepository.save(payment);
+        try {
+            paymentRepository.save(payment); // 결제 정보 저장
 
-        UserGroup userGroup = UserGroup.builder()
-                .user(leader)
-                .group(savedGroup)
-                .userDepositAmount(new BigDecimal(payment.getTotalAmount())) // 결제 금액 설정
-                .refunded(false)
-                .charged(true) // 결제 완료 상태
-                .paymentKey(payment.getPaymentKey())
-                .build();
+            UserGroup userGroup = UserGroup.builder()
+                    .user(leader)
+                    .group(savedGroup)
+                    .userDepositAmount(new BigDecimal(payment.getTotalAmount())) // 결제 금액 설정
+                    .refunded(false)
+                    .charged(true) // 결제 완료 상태
+                    .paymentKey(payment.getPaymentKey())
+                    .build();
 
-        userGroupRepository.save(userGroup);
-        leader.getUserGroups().add(userGroup);
-        savedGroup.getUserGroups().add(userGroup);
+            userGroupRepository.save(userGroup);
 
-        return savedGroup;
+            leader.getUserGroups().add(userGroup);
+            savedGroup.getUserGroups().add(userGroup);
+
+        } catch (Exception e) {
+            // 결제 저장 또는 UserGroup 업데이트 중 에러 발생 시 환불 처리
+            BigDecimal refundAmount = new BigDecimal(payment.getTotalAmount());
+            JSONObject refundResponse = PaymentUtil.processRefund(payment.getPaymentKey(), refundAmount);
+            throw new GeneralException(ErrorStatus._TOSS_SAVE_FAIL); // 예외 던지기
+        }
+
     }
 
 }

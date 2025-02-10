@@ -71,13 +71,22 @@ public class PaymentServiceImpl implements PaymentService {
                 .totalAmount(jsonResponse.get("totalAmount").toString())
                 .build();
 
-        paymentRepository.save(payment);
+        try {
+            paymentRepository.save(payment); // 결제 정보 저장
 
-        userGroup.setUserDepositAmount(new BigDecimal(payment.getTotalAmount()));
-        userGroup.setCharged(true);
-        userGroup.setPaymentKey(payment.getPaymentKey());
+            // UserGroup 업데이트
+            userGroup.setUserDepositAmount(new BigDecimal(payment.getTotalAmount()));
+            userGroup.setCharged(true);
+            userGroup.setPaymentKey(payment.getPaymentKey());
 
-        userGroupRepository.save(userGroup);
+            userGroupRepository.save(userGroup); // UserGroup 저장
+
+        } catch (Exception e) {
+            // 결제 저장 또는 UserGroup 업데이트 중 에러 발생 시 환불 처리
+            BigDecimal refundAmount = new BigDecimal(amount);
+            JSONObject refundResponse = PaymentUtil.processRefund(paymentKey, refundAmount);
+            throw new GeneralException(ErrorStatus._TOSS_SAVE_FAIL); // 예외 던지기
+        }
 
 
     }

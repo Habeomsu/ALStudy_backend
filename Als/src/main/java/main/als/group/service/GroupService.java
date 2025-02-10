@@ -16,6 +16,6 @@ public interface GroupService {
     public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto);
     public void deleteGroup(Long id,String username,String password);
     public GroupResponseDto.AllGroupDto getGroup(Long GorupId);
-    public Group createGroupWithPayment(GroupRequestDto.CreateWithPaymentDto createWithPaymentDto,String username);
+    public void createGroupWithPayment(GroupRequestDto.CreateWithPaymentDto createWithPaymentDto,String username);
 
 }

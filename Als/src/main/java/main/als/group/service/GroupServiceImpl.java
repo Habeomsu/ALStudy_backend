@@ -11,8 +11,13 @@ import main.als.group.entity.UserGroup;
 import main.als.group.repository.GroupRepository;
 import main.als.group.repository.UserGroupRepository;
 import main.als.page.PostPagingDto;
+import main.als.payment.dto.PaymentRequestDto;
+import main.als.payment.entity.Payment;
+import main.als.payment.repository.PaymentRepository;
+import main.als.payment.util.PaymentUtil;
 import main.als.user.entity.User;
 import main.als.user.repository.UserRepository;
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,12 +39,16 @@ public class GroupServiceImpl implements GroupService {
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PaymentRepository paymentRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository, UserGroupRepository userGroupRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository,
+                            UserGroupRepository userGroupRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                            PaymentRepository paymentRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -96,6 +105,8 @@ public class GroupServiceImpl implements GroupService {
         return GroupConverter.toAllGroupDto(group);
     }
 
+
+
     @Override
     public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto) {
         String password = validPasswordDto.getPassword();
@@ -141,6 +152,59 @@ public class GroupServiceImpl implements GroupService {
             groupRepository.deleteById(id);
         }
 
+    }
+
+    @Override
+    @Transactional
+    public Group createGroupWithPayment(GroupRequestDto.CreateWithPaymentDto createWithPaymentDto, String username) {
+
+        User leader = userRepository.findByUsername(username);
+        if (leader == null) {
+            throw new GeneralException(ErrorStatus._USERNAME_NOT_FOUND);
+        }
+
+        Group group = Group.builder()
+                .name(createWithPaymentDto.getGroupname())
+                .password(bCryptPasswordEncoder.encode(createWithPaymentDto.getPassword()))
+                .depositAmount(createWithPaymentDto.getDepositAmount())
+                .leader(leader.getUsername())
+                .createdAt(LocalDateTime.now())
+                .deadline(createWithPaymentDto.getDeadline())
+                .studyEndDate(createWithPaymentDto.getStudyEndDate())
+                .build();
+
+        Group savedGroup = groupRepository.save(group);
+
+        PaymentRequestDto.GroupPaymentDto paymentDto = createWithPaymentDto.getGroupPaymentDto(); // 결제 정보 포함
+        JSONObject jsonResponse = PaymentUtil.confirmPayment(paymentDto.getOrderId(), paymentDto.getAmount(), paymentDto.getPaymentKey());
+
+        if (jsonResponse == null) {
+            throw new GeneralException(ErrorStatus._TOSS_CONFIRM_FAIL);
+        }
+
+        Payment payment = Payment.builder()
+                .paymentKey(jsonResponse.get("paymentKey").toString())
+                .orderId(jsonResponse.get("orderId").toString())
+                .requestedAt(jsonResponse.get("requestedAt").toString())
+                .totalAmount(jsonResponse.get("totalAmount").toString())
+                .build();
+
+        paymentRepository.save(payment);
+
+        UserGroup userGroup = UserGroup.builder()
+                .user(leader)
+                .group(savedGroup)
+                .userDepositAmount(new BigDecimal(payment.getTotalAmount())) // 결제 금액 설정
+                .refunded(false)
+                .charged(true) // 결제 완료 상태
+                .paymentKey(payment.getPaymentKey())
+                .build();
+
+        userGroupRepository.save(userGroup);
+        leader.getUserGroups().add(userGroup);
+        savedGroup.getUserGroups().add(userGroup);
+
+        return savedGroup;
     }
 
 }

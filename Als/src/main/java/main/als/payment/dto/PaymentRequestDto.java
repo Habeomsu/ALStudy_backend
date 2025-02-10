@@ -19,4 +19,14 @@ public class PaymentRequestDto {
         Long userGroupId;
 
     }
+
+    @Getter
+    public static class GroupPaymentDto{
+        @NotNull
+        String orderId;
+        @NotNull
+        String amount;
+        @NotNull
+        String paymentKey;
+    }
 }

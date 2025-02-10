@@ -25,4 +25,7 @@ public interface GroupRepository extends JpaRepository<Group,Long> {
     @Query("SELECT g FROM Group g WHERE g.deadline > :now")
     Page<Group> findAllByDeadlineAfter(@Param("now") LocalDateTime now, Pageable pageable);
 
+    @Query("SELECT g FROM Group g WHERE g.name LIKE %:search% AND g.deadline > :now")
+    Page<Group> findByNameContainingAndDeadlineAfter(@Param("search") String search, @Param("now") LocalDateTime now, Pageable pageable);
+
 }

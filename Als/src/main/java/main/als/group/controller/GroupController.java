@@ -30,8 +30,9 @@ public class GroupController {
     @GetMapping
     public ApiResult<GroupResponseDto.SearchGroups> getAll(@RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "10") int size,
-                                                           @RequestParam(defaultValue = "desc") String sort) {
-        return ApiResult.onSuccess(groupService.getAllGroups(PagingConverter.toPagingDto(page, size, sort)));
+                                                           @RequestParam(defaultValue = "desc") String sort,
+                                                           @RequestParam(required = false) String search) {
+        return ApiResult.onSuccess(groupService.getAllGroups(PagingConverter.toPagingDto(page, size, sort),search));
     }
 
     @GetMapping("/{groupId}")

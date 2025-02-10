@@ -11,7 +11,7 @@ import java.util.List;
 public interface GroupService {
 
     public Group createGroup(GroupRequestDto.CreateGroupDto GroupRequestDto,String username);
-    public GroupResponseDto.SearchGroups getAllGroups(PostPagingDto.PagingDto pagingDto);
+    public GroupResponseDto.SearchGroups getAllGroups(PostPagingDto.PagingDto pagingDto,String search);
     public void deleteExpiredGroups();
     public boolean validateGroupPassword(GroupRequestDto.ValidPasswordDto validPasswordDto);
     public void deleteGroup(Long id,String username,String password);

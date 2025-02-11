@@ -24,8 +24,9 @@ public class ProblemController {
     public ApiResult<ProblemResponseDto.SearchProblems> allProblems(@RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "10") int size,
                                                                          @RequestParam(defaultValue = "desc") String sort,
-                                                                         @RequestParam(required = false) String problemType) {
-        return ApiResult.onSuccess(problemService.getAllProblems(PagingConverter.toPagingDto(page, size, sort),problemType));
+                                                                         @RequestParam(required = false) String problemType,
+                                                                    @RequestParam(required = false) String search) {
+        return ApiResult.onSuccess(problemService.getAllProblems(PagingConverter.toPagingDto(page, size, sort),problemType,search));
     }
 
     @GetMapping("/{problemId}")

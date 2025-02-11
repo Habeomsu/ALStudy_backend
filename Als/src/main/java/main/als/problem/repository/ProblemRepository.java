@@ -12,9 +12,16 @@ import java.util.Optional;
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
     List<Problem> findAll();
+
     Page<Problem> findAll(Pageable pageable);
+
     Optional<Problem> findById(Long id);
+
     void deleteById(Long id);
+
     Page<Problem> findByProblemType(ProblemType problemType, Pageable pageable);
 
+    Page<Problem> findByProblemTypeAndTitleContaining(ProblemType problemType, String title, Pageable pageable);
+
+    Page<Problem> findByTitleContaining(String title, Pageable pageable);
 }

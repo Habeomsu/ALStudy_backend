@@ -94,7 +94,7 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public ProblemResponseDto.SearchProblems getAllProblems(PostPagingDto.PagingDto pagingDto,String problemType) {
+    public ProblemResponseDto.SearchProblems getAllProblems(PostPagingDto.PagingDto pagingDto,String problemType,String search) {
 
         Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"id");
         Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
@@ -105,13 +105,24 @@ public class ProblemServiceImpl implements ProblemService {
             try {
                 // 문자열을 ProblemType으로 변환
                 ProblemType type = ProblemType.valueOf(problemType.toUpperCase());
-                problems = problemRepository.findByProblemType(type, pageable);
+                // 검색어가 주어진 경우
+                if (search != null && !search.isEmpty()) {
+                    problems = problemRepository.findByProblemTypeAndTitleContaining(type, search, pageable);
+                } else {
+                    problems = problemRepository.findByProblemType(type, pageable);
+                }
             } catch (IllegalArgumentException e) {
                 throw new GeneralException(ErrorStatus._INVALID_PROBLEM_TYPE); // 잘못된 문제 유형 처리
             }
         } else {
-            problems = problemRepository.findAll(pageable);
+            // 문제 유형이 주어지지 않은 경우
+            if (search != null && !search.isEmpty()) {
+                problems = problemRepository.findByTitleContaining(search, pageable);
+            } else {
+                problems = problemRepository.findAll(pageable);
+            }
         }
+
 
         return ProblemConverter.toSearchProblemDto(problems);
     }

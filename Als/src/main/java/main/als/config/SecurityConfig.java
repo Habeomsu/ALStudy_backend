@@ -63,6 +63,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/login","/join").permitAll()
                         .requestMatchers("/reissue").permitAll()
                         // GET 요청은 누구나 가능

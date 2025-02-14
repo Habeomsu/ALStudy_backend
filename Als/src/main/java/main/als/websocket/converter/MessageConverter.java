@@ -9,8 +9,11 @@ import main.als.websocket.dto.MessageRequestDto;
 import main.als.websocket.dto.MessageResponseDto;
 import main.als.websocket.entity.Message;
 import org.checkerframework.checker.units.qual.A;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class MessageConverter {
@@ -39,4 +42,21 @@ public class MessageConverter {
 
         return messageDto;
     }
+
+    public static List<MessageResponseDto.MessageDto> toMessageDto(List<Message> messages){
+        return messages.stream()
+                .map(MessageConverter::toMessageDto)
+                .collect(Collectors.toList());
+    }
+
+    public static MessageResponseDto.SearchMessage toSearchMessage(Page<Message> messages){
+        return MessageResponseDto.SearchMessage.builder()
+                .messageResDtos(toMessageDto(messages.getContent()))
+                .isFirst(messages.isFirst())
+                .isLast(messages.isLast())
+                .listSize(messages.getTotalPages())
+                .totalElements(messages.getTotalElements())
+                .build();
+    }
+
 }

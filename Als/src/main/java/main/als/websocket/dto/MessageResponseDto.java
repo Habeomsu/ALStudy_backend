@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class MessageResponseDto {
 
@@ -21,5 +22,19 @@ public class MessageResponseDto {
         private LocalDateTime createdAt;
 
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class SearchMessage{
+        List<MessageDto> messageResDtos;
+        boolean isFirst;
+        boolean isLast;
+        int listSize;
+        long totalElements;
+    }
+
+
 
 }

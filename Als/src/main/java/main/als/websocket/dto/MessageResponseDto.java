@@ -3,20 +3,23 @@ package main.als.websocket.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-public class MessageRequestDto {
+import java.time.LocalDateTime;
+
+public class MessageResponseDto {
 
     @Getter
     @Builder
-    @RequiredArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class MessageDto{
-        private String type;
+
         private String sender;
         private String channelId;
-        private String data;
-    }
+        private Object data;
+        private LocalDateTime createdAt;
 
+    }
 
 }

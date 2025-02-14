@@ -1,7 +1,8 @@
 package main.als.websocket.util;
 
 import com.github.dockerjava.api.exception.UnauthorizedException;
-import org.springframework.http.HttpStatus;
+import main.als.apiPayload.ApiResult;
+import main.als.apiPayload.code.status.ErrorStatus;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -14,6 +15,8 @@ import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+// 기타 import 생략...
+
 @Component
 public class StompExceptionHandler extends StompSubProtocolErrorHandler {
 
@@ -24,9 +27,7 @@ public class StompExceptionHandler extends StompSubProtocolErrorHandler {
     }
 
     @Override
-    public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage,
-                                                              Throwable ex) {
-
+    public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage, Throwable ex) {
         final Throwable exception = converterTrowException(ex);
 
         if (exception instanceof UnauthorizedException) {
@@ -34,7 +35,6 @@ public class StompExceptionHandler extends StompSubProtocolErrorHandler {
         }
 
         return super.handleClientMessageProcessingError(clientMessage, ex);
-
     }
 
     private Throwable converterTrowException(final Throwable exception) {
@@ -44,54 +44,47 @@ public class StompExceptionHandler extends StompSubProtocolErrorHandler {
         return exception;
     }
 
-    private Message<byte[]> handleUnauthorizedException(Message<byte[]> clientMessage,
-                                                        Throwable ex) {
-
-        return prepareErrorMessage(clientMessage, ex.getMessage(), HttpStatus.UNAUTHORIZED.name());
-
+    private Message<byte[]> handleUnauthorizedException(Message<byte[]> clientMessage, Throwable ex) {
+        // ApiResult를 사용하여 에러 메시지 생성
+        ApiResult<Object> apiResult = ApiResult.onFailure(ErrorStatus._UNAUTHORIZED.getCode(), ex.getMessage(), null);
+        return prepareErrorMessage(clientMessage, apiResult);
     }
 
-    private Message<byte[]> prepareErrorMessage(final Message<byte[]> clientMessage,
-                                                final String message, final String errorCode) {
-
+    private Message<byte[]> prepareErrorMessage(final Message<byte[]> clientMessage, ApiResult<Object> apiResult) {
         final StompHeaderAccessor accessor = StompHeaderAccessor.create(StompCommand.ERROR);
-        accessor.setMessage(errorCode);
         accessor.setLeaveMutable(true);
-
         setReceiptIdForClient(clientMessage, accessor);
 
+        // ApiResult를 JSON으로 변환하여 메시지 본문으로 설정
+        String json = convertApiResultToJson(apiResult);
         return MessageBuilder.createMessage(
-                message != null ? message.getBytes(StandardCharsets.UTF_8) : EMPTY_PAYLOAD,
+                json.getBytes(StandardCharsets.UTF_8),
                 accessor.getMessageHeaders()
         );
     }
 
-    private void setReceiptIdForClient(final Message<byte[]> clientMessage,
-                                       final StompHeaderAccessor accessor) {
+    private String convertApiResultToJson(ApiResult<Object> apiResult) {
+        // ObjectMapper 등을 사용하여 ApiResult를 JSON 문자열로 변환
+        // 예시로 간단히 toString() 사용
+        return apiResult.toString(); // 적절한 JSON 변환 로직으로 변경
+    }
 
+    private void setReceiptIdForClient(final Message<byte[]> clientMessage, final StompHeaderAccessor accessor) {
         if (Objects.isNull(clientMessage)) {
             return;
         }
 
-        final StompHeaderAccessor clientHeaderAccessor = MessageHeaderAccessor.getAccessor(
-                clientMessage, StompHeaderAccessor.class);
-
-        final String receiptId =
-                Objects.isNull(clientHeaderAccessor) ? null : clientHeaderAccessor.getReceipt();
+        final StompHeaderAccessor clientHeaderAccessor = MessageHeaderAccessor.getAccessor(clientMessage, StompHeaderAccessor.class);
+        final String receiptId = Objects.isNull(clientHeaderAccessor) ? null : clientHeaderAccessor.getReceipt();
 
         if (receiptId != null) {
             accessor.setReceiptId(receiptId);
         }
     }
 
-    //2
     @Override
     protected Message<byte[]> handleInternal(StompHeaderAccessor errorHeaderAccessor,
                                              byte[] errorPayload, Throwable cause, StompHeaderAccessor clientHeaderAccessor) {
-
         return MessageBuilder.createMessage(errorPayload, errorHeaderAccessor.getMessageHeaders());
-
-//        return super.handleInternal(errorHeaderAccessor, errorPayload, cause, clientHeaderAccessor);
     }
 }
-

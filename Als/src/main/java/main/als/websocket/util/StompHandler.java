@@ -29,7 +29,6 @@ public class StompHandler implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
-        assert headerAccessor != null;
         if (headerAccessor.getCommand() == StompCommand.CONNECT) { // 연결 시에 토큰 검증
             String token = headerAccessor.getNativeHeader("access") != null ?
                     headerAccessor.getNativeHeader("access").get(0) : null;

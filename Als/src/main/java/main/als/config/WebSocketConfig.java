@@ -28,7 +28,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setVirtualHost("/")
                 .setRelayPort(61613)
                 .setClientLogin("guest")
-                .setClientPasscode("guest");
+                .setClientPasscode("guest")
+
+        ;
+
     }
 
     @Override
@@ -37,7 +40,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setErrorHandler(stompExceptionHandler)
                 .addEndpoint("/ws")
                 .setAllowedOrigins("*")
-                .addInterceptors()
+
+
+
+
 
         ;
     }

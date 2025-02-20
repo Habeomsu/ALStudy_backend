@@ -29,27 +29,27 @@
 ## 🏗️ 프로젝트 구조
 
 📦 als  
- ┣ 📂 apiPayload  # API 응답 및 오류 처리 관련  
- ┃ ┣ 📂 code  # 코드 상태 및 오류 관련 클래스  
- ┃ ┣ 📂 exception  # 예외 처리 클래스  
- ┃ ┗ 📜 ApiResult.java  # API 결과 형식 정의  
- ┣ 📂 aws  # AWS 관련 설정  
- ┃ ┗ 📂 s3  # S3 관리 클래스  
- ┣ 📂 config  # 애플리케이션 설정  
- ┣ 📂 group  # 그룹 관련 기능  
- ┃ ┣ 📂 controller  # 그룹 관련 API 컨트롤러  
- ┃ ┣ 📂 dto  # 그룹 관련 DTO 클래스  
- ┃ ┣ 📂 entity  # 그룹 관련 엔터티  
- ┃ ┣ 📂 repository  # 그룹 데이터 접근 객체  
- ┃ ┣ 📂 converter  # 그룹 관련 컨버터  
- ┃ ┗ 📂 service  # 그룹 관련 서비스  
- ┣ 📂 page  # 페이지 관련 기능  
- ┣ 📂 payment  # 결제 관련 기능  
- ┣ 📂 problem  # 문제 및 제출 관련 기능  
- ┣ 📂 user  # 사용자 관련 기능  
- ┣ 📂 valid  # 유효성 검사 관련 기능  
- ┣ 📂 websocket  # WebSocket 관련 기능  
- ┣ 📜 AlsApplication.java  # 애플리케이션 시작점  
+ ┣ 📂 apiPayload(               )# API 응답 및 오류 처리 관련  
+ ┃ ┣ 📂 code(                   )# 코드 상태 및 오류 관련 클래스  
+ ┃ ┣ 📂 exception                # 예외 처리 클래스  
+ ┃ ┗ 📜 ApiResult.java           # API 결과 형식 정의  
+ ┣ 📂 aws                        # AWS 관련 설정  
+ ┃ ┗ 📂 s3                       # S3 관리 클래스  
+ ┣ 📂 config                     # 애플리케이션 설정  
+ ┣ 📂 group                      # 그룹 관련 기능  
+ ┃ ┣ 📂 controller               # 그룹 관련 API 컨트롤러  
+ ┃ ┣ 📂 dto                      # 그룹 관련 DTO 클래스  
+ ┃ ┣ 📂 entity                   # 그룹 관련 엔터티  
+ ┃ ┣ 📂 repository               # 그룹 데이터 접근 객체  
+ ┃ ┣ 📂 converter                # 그룹 관련 컨버터  
+ ┃ ┗ 📂 service                  # 그룹 관련 서비스  
+ ┣ 📂 page                       # 페이지 관련 기능  
+ ┣ 📂 payment                    # 결제 관련 기능  
+ ┣ 📂 problem                    # 문제 및 제출 관련 기능  
+ ┣ 📂 user                       # 사용자 관련 기능  
+ ┣ 📂 valid                      # 유효성 검사 관련 기능  
+ ┣ 📂 websocket                  # WebSocket 관련 기능  
+ ┣ 📜 AlsApplication.java        # 애플리케이션 시작점    
 
 ## ⚙️ 기술 스택
 - **Backend**: Spring Boot, Java, Spring MVC, Spring Data JPA  

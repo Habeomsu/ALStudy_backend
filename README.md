@@ -54,11 +54,11 @@
 
 ```
 ## ⚙️ 기술 스택
-- **Backend**: Spring Boot, Java, Spring MVC, Spring Data JPA  
-- **Database**: MySQL / PostgreSQL  
-- **AI Model**: Flask, Scikit-learn, TensorFlow  
-- **API**: Spotify API, Flask API  
-- **Infra**: Docker, AWS (EC2, S3), Nginx  
+- **Backend**: Spring Boot, Java, Spring MVC, Spring Data JPA, Flask
+- **STOMP**: RabbitMQ  
+- **Database**: MySQL
+- **API**: Flask API, TOSS_PAYMENTS API  
+
 
 ## 📖 API 문서
 (추후 Swagger 혹은 Postman 문서를 링크)  

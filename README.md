@@ -27,8 +27,8 @@
 - 로그인한 사용자만 그룹 생성 및 가입, 문제 풀이 등의 기능을 사용할 수 있습니다.  
 - JWT를 사용하여 보안을 강화합니다.
 ## 🏗️ 프로젝트 구조
-📦 als
- ┣ 📂 apiPayload                  # API 응답 및 오류 처리 관련  
+📦 als  
+ ┣ 📂 apiPayload                 # API 응답 및 오류 처리 관련  
  ┃ ┣ 📂 code                     # 코드 상태 및 오류 관련 클래스  
  ┃ ┣ 📂 exception                # 예외 처리 클래스  
  ┃ ┗ 📜 ApiResult.java           # API 결과 형식 정의  
@@ -40,6 +40,7 @@
  ┃ ┣ 📂 dto                      # 그룹 관련 DTO 클래스  
  ┃ ┣ 📂 entity                   # 그룹 관련 엔터티  
  ┃ ┣ 📂 repository               # 그룹 데이터 접근 객체  
+ ┃ ┣ 📂 converter                # 그룹 관련 컨버터  
  ┃ ┗ 📂 service                  # 그룹 관련 서비스  
  ┣ 📂 page                       # 페이지 관련 기능  
  ┣ 📂 payment                    # 결제 관련 기능  

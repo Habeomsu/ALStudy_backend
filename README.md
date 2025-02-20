@@ -29,8 +29,8 @@
 ## 🏗️ 프로젝트 구조
 
 📦 als  
- ┣ 📂 apiPayload(               )# API 응답 및 오류 처리 관련  
- ┃ ┣ 📂 code(                   )# 코드 상태 및 오류 관련 클래스  
+ ┣ 📂 apiPayload                 # API 응답 및 오류 처리 관련  
+ ┃ ┣ 📂 code                     # 코드 상태 및 오류 관련 클래스  
  ┃ ┣ 📂 exception                # 예외 처리 클래스  
  ┃ ┗ 📜 ApiResult.java           # API 결과 형식 정의  
  ┣ 📂 aws                        # AWS 관련 설정  

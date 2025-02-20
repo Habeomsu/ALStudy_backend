@@ -22,3 +22,17 @@ Spring Boot 기반으로 개발되었으며, Flask 기반의 AI 모델과 연동
 - 프론트엔드 및 외부 서비스와의 통신을 위한 RESTful API를 제공합니다.
 
 ## 🏗️ 프로젝트 구조
+
+하하하 
+
+## ⚙️ 기술 스택
+- **Backend**: Spring Boot, Java, Spring MVC, Spring Data JPA  
+- **Database**: MySQL / PostgreSQL  
+- **AI Model**: Flask, Scikit-learn, TensorFlow  
+- **API**: Spotify API, Flask API  
+- **Infra**: Docker, AWS (EC2, S3), Nginx  
+
+## 📖 API 문서
+(추후 Swagger 혹은 Postman 문서를 링크)  
+
+## 🛠️ 배포

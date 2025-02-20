@@ -28,6 +28,7 @@
 - JWT를 사용하여 보안을 강화합니다.
 ## 🏗️ 프로젝트 구조
 ```
+
 📦 als  
  ┣ 📂 apiPayload                 # API 응답 및 오류 처리 관련  
  ┃ ┣ 📂 code                     # 코드 상태 및 오류 관련 클래스  
@@ -49,7 +50,8 @@
  ┣ 📂 user                       # 사용자 관련 기능  
  ┣ 📂 valid                      # 유효성 검사 관련 기능  
  ┣ 📂 websocket                  # WebSocket 관련 기능  
- ┣ 📜 AlsApplication.java        # 애플리케이션 시작점    
+ ┣ 📜 AlsApplication.java        # 애플리케이션 시작점
+
 ```
 ## ⚙️ 기술 스택
 - **Backend**: Spring Boot, Java, Spring MVC, Spring Data JPA  

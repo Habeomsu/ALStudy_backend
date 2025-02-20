@@ -14,7 +14,8 @@
 ### 1. 그룹 관리  
 - 사용자는 **스터디 그룹을 생성**하고, 비밀번호를 입력해 가입이 가능합니다.  
 - 그룹장은 **문제 생성** 및 **그룹 설정 변경**이 가능합니다.
-https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java
+- 관련 링크  
+- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java
 
 ### 2. 문제 풀이 및 채점  
 - 사용자는 그룹 내에서 **알고리즘 문제를 제출 및 풀이**할 수 있습니다.  

@@ -16,6 +16,8 @@
 - 그룹장은 **문제 생성** 및 **그룹 설정 변경**이 가능합니다.
 - 관련 링크  
 - https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java
+  그룹생성<img width="1697" alt="스크린샷 2025-02-24 오후 3 48 03" src="https://github.com/user-attachments/assets/f481f00e-b144-4227-9eaf-354fa9f74b9c" />
+
 
 ### 2. 문제 풀이 및 채점  
 - 사용자는 그룹 내에서 **알고리즘 문제를 제출 및 풀이**할 수 있습니다.  

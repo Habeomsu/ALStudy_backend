@@ -35,7 +35,9 @@
 - 사용자들은 서비스 이용을 위해 **예치금을 충전**할 수 있으며, **사용 후 남은 금액을 환급**받을 수도 있습니다.  
 - 결제 및 환불 시스템을 통해 안전하게 거래가 진행됩니다.  
 - 관련 링크
-- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/payment/service/PaymentServiceImpl.java
+- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/payment/service/PaymentServiceImpl.java  
+  예치금 충전 <img width="1710" alt="스크린샷 2025-02-24 오후 3 46 37" src="https://github.com/user-attachments/assets/aff5f1a8-c26a-46ca-85b9-15eff4f1fe59" />
+
 ### 5. 사용자 인증 (로그인/로그아웃)  
 - 로그인한 사용자만 그룹 생성 및 가입, 문제 풀이 등의 기능을 사용할 수 있습니다.  
 - JWT를 사용하여 보안을 강화합니다.

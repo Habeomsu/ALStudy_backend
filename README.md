@@ -29,7 +29,8 @@
 - 그룹별 **실시간 채팅 기능**을 제공하여, 문제 풀이 관련 논의 및 스터디 진행이 가능합니다.  
 - 특정 코드나 문제에 대한 의견을 공유할 수도 있습니다.  
 - 관련 링크
-- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/websocket/service/MessageServiceImpl.java
+- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/websocket/service/MessageServiceImpl.java  
+  그룹 채팅 <img width="1699" alt="스크린샷 2025-02-24 오후 3 46 51" src="https://github.com/user-attachments/assets/628b593d-8fc5-4320-aaed-bdbd4ea29c02" />
 ### 4. 예치금 충전 및 환급  
 - 사용자들은 서비스 이용을 위해 **예치금을 충전**할 수 있으며, **사용 후 남은 금액을 환급**받을 수도 있습니다.  
 - 결제 및 환불 시스템을 통해 안전하게 거래가 진행됩니다.  

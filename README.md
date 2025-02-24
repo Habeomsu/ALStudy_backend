@@ -22,8 +22,8 @@
 - 사용자는 그룹 내에서 **알고리즘 문제를 제출 및 풀이**할 수 있습니다.  
 - 코드 실행 및 채점을 통해 정답 여부를 확인할 수 있으며, 그룹원들의 코드와 비교할 수도 있습니다.  
 - 관련 링크
-- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/problem/service/SubmissionServiceImpl.java
-  문제 코드 제출<img width="1697" alt="스크린샷 2025-02-24 오후 3 47 26" src="https://github.com/user-attachments/assets/ef2bcc7d-fed8-474a-9eed-2ad526f67b6d" />
+- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/problem/service/SubmissionServiceImpl.java  
+  문제 코드 제출<img width="1697" alt="스크린샷 2025-02-24 오후 3 47 26" src="https://github.com/user-attachments/assets/ef2bcc7d-fed8-474a-9eed-2ad526f67b6d" />  
   그룹원 코드 비교 <img width="1697" alt="스크린샷 2025-02-24 오후 3 47 12" src="https://github.com/user-attachments/assets/cab49f52-f1df-4295-b149-83adc9327b57" />
 ### 3. 그룹 채팅 및 소통  
 - 그룹별 **실시간 채팅 기능**을 제공하여, 문제 풀이 관련 논의 및 스터디 진행이 가능합니다.  

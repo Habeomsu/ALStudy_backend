@@ -15,7 +15,7 @@
 - 사용자는 **스터디 그룹을 생성**하고, 비밀번호를 입력해 가입이 가능합니다.  
 - 그룹장은 **문제 생성** 및 **그룹 설정 변경**이 가능합니다.
 - 관련 링크  
-- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java
+- https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java  
   그룹생성<img width="1697" alt="스크린샷 2025-02-24 오후 3 48 03" src="https://github.com/user-attachments/assets/f481f00e-b144-4227-9eaf-354fa9f74b9c" />
 
 

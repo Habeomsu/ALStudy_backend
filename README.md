@@ -16,27 +16,27 @@
 - 그룹장은 **문제 생성** 및 **그룹 설정 변경**이 가능합니다.
 - 관련 링크  
 - https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/group/service/GroupServiceImpl.java  
-  그룹생성<img width="1697" alt="스크린샷 2025-02-24 오후 3 48 03" src="https://github.com/user-attachments/assets/f481f00e-b144-4227-9eaf-354fa9f74b9c" />
+- 그룹생성<img width="1697" alt="스크린샷 2025-02-24 오후 3 48 03" src="https://github.com/user-attachments/assets/f481f00e-b144-4227-9eaf-354fa9f74b9c" />
 
 ### 2. 문제 풀이 및 채점  
 - 사용자는 그룹 내에서 **알고리즘 문제를 제출 및 풀이**할 수 있습니다.  
 - 코드 실행 및 채점을 통해 정답 여부를 확인할 수 있으며, 그룹원들의 코드와 비교할 수도 있습니다.  
 - 관련 링크
 - https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/problem/service/SubmissionServiceImpl.java  
-  문제 코드 제출<img width="1697" alt="스크린샷 2025-02-24 오후 3 47 26" src="https://github.com/user-attachments/assets/ef2bcc7d-fed8-474a-9eed-2ad526f67b6d" />  
-  그룹원 코드 비교 <img width="1697" alt="스크린샷 2025-02-24 오후 3 47 12" src="https://github.com/user-attachments/assets/cab49f52-f1df-4295-b149-83adc9327b57" />
+- 문제 코드 제출<img width="1697" alt="스크린샷 2025-02-24 오후 3 47 26" src="https://github.com/user-attachments/assets/ef2bcc7d-fed8-474a-9eed-2ad526f67b6d" />  
+- 그룹원 코드 비교 <img width="1697" alt="스크린샷 2025-02-24 오후 3 47 12" src="https://github.com/user-attachments/assets/cab49f52-f1df-4295-b149-83adc9327b57" />
 ### 3. 그룹 채팅 및 소통  
 - 그룹별 **실시간 채팅 기능**을 제공하여, 문제 풀이 관련 논의 및 스터디 진행이 가능합니다.  
 - 특정 코드나 문제에 대한 의견을 공유할 수도 있습니다.  
 - 관련 링크
 - https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/websocket/service/MessageServiceImpl.java  
-  그룹 채팅 <img width="1699" alt="스크린샷 2025-02-24 오후 3 46 51" src="https://github.com/user-attachments/assets/628b593d-8fc5-4320-aaed-bdbd4ea29c02" />
+- 그룹 채팅 <img width="1699" alt="스크린샷 2025-02-24 오후 3 46 51" src="https://github.com/user-attachments/assets/628b593d-8fc5-4320-aaed-bdbd4ea29c02" />
 ### 4. 예치금 충전 및 환급  
 - 사용자들은 서비스 이용을 위해 **예치금을 충전**할 수 있으며, **사용 후 남은 금액을 환급**받을 수도 있습니다.  
 - 결제 및 환불 시스템을 통해 안전하게 거래가 진행됩니다.  
 - 관련 링크
 - https://github.com/Habeomsu/ALStudy/blob/main/Als/src/main/java/main/als/payment/service/PaymentServiceImpl.java  
-  예치금 충전 <img width="1710" alt="스크린샷 2025-02-24 오후 3 46 37" src="https://github.com/user-attachments/assets/aff5f1a8-c26a-46ca-85b9-15eff4f1fe59" />
+- 예치금 충전 <img width="1710" alt="스크린샷 2025-02-24 오후 3 46 37" src="https://github.com/user-attachments/assets/aff5f1a8-c26a-46ca-85b9-15eff4f1fe59" />
 
 ### 5. 사용자 인증 (로그인/로그아웃)  
 - 로그인한 사용자만 그룹 생성 및 가입, 문제 풀이 등의 기능을 사용할 수 있습니다.  

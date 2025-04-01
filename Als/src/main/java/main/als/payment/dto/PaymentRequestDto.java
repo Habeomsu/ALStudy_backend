@@ -1,6 +1,7 @@
 package main.als.payment.dto;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 public class PaymentRequestDto {
@@ -21,6 +22,7 @@ public class PaymentRequestDto {
     }
 
     @Getter
+    @Builder
     public static class GroupPaymentDto{
         @NotNull
         String orderId;

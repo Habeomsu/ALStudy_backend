@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -189,5 +190,28 @@ public class UserGroupRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("사용자 이름으로 유저그룹 찾기")
+    public void findUserGroupsByUsernameTest(){
+
+        UserGroup userGroup1 = UserGroup.builder()
+                .user(savedUser)
+                .build();
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        userGroupRepository.save(userGroup1);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Page<UserGroup> userGroups = userRepository.findUserGroupsByUsername(savedUser.getUsername(), pageable);
+
+        assertEquals(1, userGroups.getTotalElements());
+
+        UserGroup result = userGroups.getContent().get(0);
+        assertEquals(savedUser.getUsername(), result.getUser().getUsername());
+
+    }
 
 }

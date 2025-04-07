@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import main.als.group.entity.UserGroup;
-import main.als.problem.entity.Submission;
+import main.als.problemTest.entity.Submission;
 
 import java.util.ArrayList;
 import java.util.List;

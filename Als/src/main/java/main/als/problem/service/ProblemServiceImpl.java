@@ -84,6 +84,8 @@ public class ProblemServiceImpl implements ProblemService {
             // 문제 저장 (변경 사항이 자동으로 반영됨)
             problemRepository.save(problem);
 
+        } catch (GeneralException e) {
+            throw e;
         } catch (StaleObjectStateException e) {
             throw new GeneralException(ErrorStatus._BAD_REQUEST);
         } catch (Exception e) {

@@ -1,10 +1,9 @@
 package main.als.problemTest;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
-import main.als.problemTest.entity.Problem;
-import main.als.problemTest.entity.ProblemType;
-import main.als.problemTest.repository.ProblemRepository;
+import main.als.problem.entity.Problem;
+import main.als.problem.entity.ProblemType;
+import main.als.problem.repository.ProblemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

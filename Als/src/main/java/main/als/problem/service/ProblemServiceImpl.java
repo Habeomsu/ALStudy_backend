@@ -1,18 +1,18 @@
-package main.als.problemTest.service;
+package main.als.problem.service;
 
 
 import jakarta.transaction.Transactional;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
 import main.als.page.PostPagingDto;
-import main.als.problemTest.converter.ProblemConverter;
-import main.als.problemTest.dto.ProblemRequestDto;
-import main.als.problemTest.dto.ProblemResponseDto;
-import main.als.problemTest.entity.Problem;
-import main.als.problemTest.entity.ProblemType;
-import main.als.problemTest.entity.TestCase;
-import main.als.problemTest.repository.ProblemRepository;
-import main.als.problemTest.repository.TestCaseRepository;
+import main.als.problem.converter.ProblemConverter;
+import main.als.problem.dto.ProblemRequestDto;
+import main.als.problem.dto.ProblemResponseDto;
+import main.als.problem.entity.Problem;
+import main.als.problem.entity.ProblemType;
+import main.als.problem.entity.TestCase;
+import main.als.problem.repository.ProblemRepository;
+import main.als.problem.repository.TestCaseRepository;
 import org.hibernate.StaleObjectStateException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,7 +1,7 @@
-package main.als.problemTest.service;
+package main.als.problem.service;
 
 import main.als.page.PostPagingDto;
-import main.als.problemTest.dto.SubmissionResponseDto;
+import main.als.problem.dto.SubmissionResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SubmissionService {

@@ -1,4 +1,4 @@
-package main.als.problemTest.entity;
+package main.als.problem.entity;
 
 public enum Deduct {
     FALSE,

@@ -3,7 +3,7 @@ package main.als.group.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import main.als.problemTest.entity.GroupProblem;
+import main.als.problem.entity.GroupProblem;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

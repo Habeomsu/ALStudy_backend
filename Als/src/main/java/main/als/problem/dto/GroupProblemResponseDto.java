@@ -1,8 +1,8 @@
-package main.als.problemTest.dto;
+package main.als.problem.dto;
 
 import lombok.*;
-import main.als.problemTest.entity.ProblemType;
-import main.als.problemTest.entity.SubmissionStatus;
+import main.als.problem.entity.ProblemType;
+import main.als.problem.entity.SubmissionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

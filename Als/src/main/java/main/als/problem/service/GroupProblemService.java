@@ -1,8 +1,8 @@
-package main.als.problemTest.service;
+package main.als.problem.service;
 
 import main.als.page.PostPagingDto;
-import main.als.problemTest.dto.GroupProblemRequestDto;
-import main.als.problemTest.dto.GroupProblemResponseDto;
+import main.als.problem.dto.GroupProblemRequestDto;
+import main.als.problem.dto.GroupProblemResponseDto;
 
 public interface GroupProblemService {
     void createGroupProblem(GroupProblemRequestDto.GroupProblemDto groupProblemDto,String username,Long groupId);

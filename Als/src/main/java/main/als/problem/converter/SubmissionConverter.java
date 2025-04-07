@@ -1,7 +1,7 @@
-package main.als.problemTest.converter;
+package main.als.problem.converter;
 
-import main.als.problemTest.dto.SubmissionResponseDto;
-import main.als.problemTest.entity.Submission;
+import main.als.problem.dto.SubmissionResponseDto;
+import main.als.problem.entity.Submission;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

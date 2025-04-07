@@ -1,8 +1,8 @@
-package main.als.problemTest.converter;
+package main.als.problem.converter;
 
-import main.als.problemTest.dto.ProblemRequestDto;
-import main.als.problemTest.dto.ProblemResponseDto;
-import main.als.problemTest.entity.Problem;
+import main.als.problem.dto.ProblemRequestDto;
+import main.als.problem.dto.ProblemResponseDto;
+import main.als.problem.entity.Problem;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;

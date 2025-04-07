@@ -1,15 +1,15 @@
-package main.als.problemTest.service;
+package main.als.problem.service;
 
 import jakarta.transaction.Transactional;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
-import main.als.problemTest.converter.TestCaseConverter;
-import main.als.problemTest.dto.TestCaseRequestDto;
-import main.als.problemTest.dto.TestCaseResponseDto;
-import main.als.problemTest.entity.Problem;
-import main.als.problemTest.entity.TestCase;
-import main.als.problemTest.repository.ProblemRepository;
-import main.als.problemTest.repository.TestCaseRepository;
+import main.als.problem.converter.TestCaseConverter;
+import main.als.problem.dto.TestCaseRequestDto;
+import main.als.problem.dto.TestCaseResponseDto;
+import main.als.problem.entity.Problem;
+import main.als.problem.entity.TestCase;
+import main.als.problem.repository.ProblemRepository;
+import main.als.problem.repository.TestCaseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

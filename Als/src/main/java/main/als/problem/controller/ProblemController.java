@@ -1,11 +1,11 @@
-package main.als.problemTest.controller;
+package main.als.problem.controller;
 
 import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
 import main.als.page.PagingConverter;
-import main.als.problemTest.dto.ProblemRequestDto;
-import main.als.problemTest.dto.ProblemResponseDto;
-import main.als.problemTest.service.ProblemService;
+import main.als.problem.dto.ProblemRequestDto;
+import main.als.problem.dto.ProblemResponseDto;
+import main.als.problem.service.ProblemService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

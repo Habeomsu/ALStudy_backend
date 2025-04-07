@@ -1,12 +1,12 @@
-package main.als.problemTest.controller;
+package main.als.problem.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import main.als.apiPayload.ApiResult;
 import main.als.page.PagingConverter;
-import main.als.problemTest.dto.GroupProblemRequestDto;
-import main.als.problemTest.dto.GroupProblemResponseDto;
-import main.als.problemTest.service.GroupProblemService;
+import main.als.problem.dto.GroupProblemRequestDto;
+import main.als.problem.dto.GroupProblemResponseDto;
+import main.als.problem.service.GroupProblemService;
 import main.als.user.dto.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
-package main.als.problemTest.service;
+package main.als.problem.service;
 
-import main.als.problemTest.dto.TestCaseRequestDto;
-import main.als.problemTest.dto.TestCaseResponseDto;
+import main.als.problem.dto.TestCaseRequestDto;
+import main.als.problem.dto.TestCaseResponseDto;
 
 import java.util.List;
 

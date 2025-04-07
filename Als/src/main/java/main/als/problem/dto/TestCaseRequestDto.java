@@ -1,4 +1,4 @@
-package main.als.problemTest.dto;
+package main.als.problem.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

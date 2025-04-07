@@ -1,7 +1,7 @@
-package main.als.problemTest.util;
+package main.als.problem.util;
 
-import main.als.problemTest.entity.Submission;
-import main.als.problemTest.entity.SubmissionStatus;
+import main.als.problem.entity.Submission;
+import main.als.problem.entity.SubmissionStatus;
 
 import java.util.List;
 

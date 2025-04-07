@@ -1,7 +1,7 @@
-package main.als.problemTest.repository;
+package main.als.problem.repository;
 
-import main.als.problemTest.entity.Problem;
-import main.als.problemTest.entity.ProblemType;
+import main.als.problem.entity.Problem;
+import main.als.problem.entity.ProblemType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

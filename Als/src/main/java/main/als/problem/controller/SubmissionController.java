@@ -1,11 +1,11 @@
-package main.als.problemTest.controller;
+package main.als.problem.controller;
 
 
 import main.als.apiPayload.ApiResult;
 import main.als.page.PagingConverter;
 
-import main.als.problemTest.dto.SubmissionResponseDto;
-import main.als.problemTest.service.SubmissionService;
+import main.als.problem.dto.SubmissionResponseDto;
+import main.als.problem.service.SubmissionService;
 import main.als.user.dto.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

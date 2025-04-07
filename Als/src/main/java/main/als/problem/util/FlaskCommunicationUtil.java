@@ -1,10 +1,10 @@
-package main.als.problemTest.util;
+package main.als.problem.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.als.apiPayload.code.status.ErrorStatus;
 import main.als.apiPayload.exception.GeneralException;
-import main.als.problemTest.entity.TestCase;
+import main.als.problem.entity.TestCase;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

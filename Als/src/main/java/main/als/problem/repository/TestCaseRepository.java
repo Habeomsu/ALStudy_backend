@@ -1,6 +1,6 @@
-package main.als.problemTest.repository;
+package main.als.problem.repository;
 
-import main.als.problemTest.entity.TestCase;
+import main.als.problem.entity.TestCase;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

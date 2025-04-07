@@ -1,9 +1,8 @@
-package main.als.problem.converter;
+package main.als.problemTest.converter;
 
-import main.als.problem.dto.GroupProblemRequestDto;
-import main.als.problem.dto.GroupProblemResponseDto;
-import main.als.problem.entity.GroupProblem;
-import main.als.problem.entity.SubmissionStatus;
+import main.als.problemTest.dto.GroupProblemResponseDto;
+import main.als.problemTest.entity.GroupProblem;
+import main.als.problemTest.entity.SubmissionStatus;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

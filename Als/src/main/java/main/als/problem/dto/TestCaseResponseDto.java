@@ -1,4 +1,4 @@
-package main.als.problem.dto;
+package main.als.problemTest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

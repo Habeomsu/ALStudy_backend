@@ -1,12 +1,7 @@
-package main.als.problem.converter;
+package main.als.problemTest.converter;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import main.als.problem.dto.SubmissionRequestDto;
-import main.als.problem.dto.SubmissionResponseDto;
-import main.als.problem.entity.Submission;
+import main.als.problemTest.dto.SubmissionResponseDto;
+import main.als.problemTest.entity.Submission;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

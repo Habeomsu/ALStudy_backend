@@ -1,7 +1,7 @@
-package main.als.problem.repository;
+package main.als.problemTest.repository;
 
 import jakarta.transaction.Transactional;
-import main.als.problem.entity.GroupProblem;
+import main.als.problemTest.entity.GroupProblem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

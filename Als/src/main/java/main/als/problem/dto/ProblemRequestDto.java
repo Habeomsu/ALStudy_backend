@@ -1,4 +1,4 @@
-package main.als.problem.dto;
+package main.als.problemTest.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import main.als.problem.entity.ProblemType;
+import main.als.problemTest.entity.ProblemType;
 
 public class ProblemRequestDto {
 

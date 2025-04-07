@@ -1,12 +1,11 @@
-package main.als.problem.dto;
+package main.als.problemTest.dto;
 
 import lombok.*;
-import main.als.problem.entity.ProblemType;
-import main.als.problem.entity.SubmissionStatus;
+import main.als.problemTest.entity.ProblemType;
+import main.als.problemTest.entity.SubmissionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class GroupProblemResponseDto {

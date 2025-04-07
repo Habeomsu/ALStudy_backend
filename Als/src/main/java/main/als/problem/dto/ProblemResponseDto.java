@@ -1,11 +1,10 @@
-package main.als.problem.dto;
+package main.als.problemTest.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import main.als.group.dto.GroupResponseDto;
-import main.als.problem.entity.ProblemType;
+import main.als.problemTest.entity.ProblemType;
 
 import java.time.LocalDateTime;
 import java.util.List;

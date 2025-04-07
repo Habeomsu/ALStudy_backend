@@ -1,21 +1,15 @@
-package main.als.problem.controller;
+package main.als.problemTest.controller;
 
 
-import jakarta.validation.Valid;
-import jakarta.ws.rs.Path;
 import main.als.apiPayload.ApiResult;
 import main.als.page.PagingConverter;
-import main.als.problem.dto.SubmissionRequestDto;
 
-import main.als.problem.dto.SubmissionResponseDto;
-import main.als.problem.service.SubmissionService;
+import main.als.problemTest.dto.SubmissionResponseDto;
+import main.als.problemTest.service.SubmissionService;
 import main.als.user.dto.CustomUserDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/submission")

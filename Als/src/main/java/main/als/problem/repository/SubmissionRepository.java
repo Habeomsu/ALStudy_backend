@@ -1,8 +1,8 @@
-package main.als.problem.repository;
+package main.als.problemTest.repository;
 
-import main.als.problem.entity.GroupProblem;
-import main.als.problem.entity.Submission;
-import main.als.problem.entity.SubmissionStatus;
+import main.als.problemTest.entity.GroupProblem;
+import main.als.problemTest.entity.Submission;
+import main.als.problemTest.entity.SubmissionStatus;
 import main.als.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

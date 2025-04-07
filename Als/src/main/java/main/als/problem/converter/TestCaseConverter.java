@@ -1,7 +1,7 @@
-package main.als.problem.converter;
+package main.als.problemTest.converter;
 
-import main.als.problem.dto.TestCaseResponseDto;
-import main.als.problem.entity.TestCase;
+import main.als.problemTest.dto.TestCaseResponseDto;
+import main.als.problemTest.entity.TestCase;
 
 import java.util.List;
 import java.util.stream.Collectors;

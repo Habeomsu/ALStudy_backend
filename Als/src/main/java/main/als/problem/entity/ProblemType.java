@@ -1,4 +1,4 @@
-package main.als.problem.entity;
+package main.als.problemTest.entity;
 
 public enum ProblemType {
     GREEDY,            // 그리디

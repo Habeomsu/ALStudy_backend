@@ -1,11 +1,10 @@
-package main.als.problem.controller;
+package main.als.problemTest.controller;
 
-import io.swagger.v3.core.jackson.ApiResponsesSerializer;
 import jakarta.validation.Valid;
 import main.als.apiPayload.ApiResult;
-import main.als.problem.dto.TestCaseRequestDto;
-import main.als.problem.dto.TestCaseResponseDto;
-import main.als.problem.service.TestCaseService;
+import main.als.problemTest.dto.TestCaseRequestDto;
+import main.als.problemTest.dto.TestCaseResponseDto;
+import main.als.problemTest.service.TestCaseService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

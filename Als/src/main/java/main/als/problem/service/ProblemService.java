@@ -1,12 +1,9 @@
-package main.als.problem.service;
+package main.als.problemTest.service;
 
 
 import main.als.page.PostPagingDto;
-import main.als.problem.dto.ProblemRequestDto;
-import main.als.problem.dto.ProblemResponseDto;
-import main.als.problem.entity.Problem;
-
-import java.util.List;
+import main.als.problemTest.dto.ProblemRequestDto;
+import main.als.problemTest.dto.ProblemResponseDto;
 
 public interface ProblemService {
     void createProblem(ProblemRequestDto.createProblemDto requestDto);

@@ -1,12 +1,4 @@
-package main.als.problem.dto;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+package main.als.problemTest.dto;
 
 public class SubmissionRequestDto {
 

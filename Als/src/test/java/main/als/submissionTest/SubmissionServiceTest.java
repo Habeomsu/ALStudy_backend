@@ -1144,5 +1144,295 @@ public class SubmissionServiceTest {
 
     }
 
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (성공)")
+    public void getOtherSubmissionSuccessTest(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        Submission submission1 = Submission.builder()
+                .id(submissionId)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.SUCCEEDED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(true);
+        when(submissionRepository.existsByUserAndGroupProblemAndStatus(user, groupProblem, SubmissionStatus.SUCCEEDED)).thenReturn(true);
+        when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission1));
+
+        SubmissionResponseDto.OtherSubmissionDto dto = SubmissionResponseDto.OtherSubmissionDto.builder()
+                .id(submissionId)
+                .build();
+
+        try(MockedStatic<SubmissionConverter> mockedStatic = Mockito.mockStatic(SubmissionConverter.class)) {
+            mockedStatic.when(()->SubmissionConverter.toOtherSubmission(submission1)).thenReturn(dto);
+
+            SubmissionResponseDto.OtherSubmissionDto result  = submissionService.getOtherSubmission(groupProblemId, submissionId, username);
+
+            assertEquals(dto, result);
+
+        }
+    }
+
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (실패 - 사용자없음)")
+    public void getOtherSubmissionFailTest1(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        when(userRepository.findByUsername(username)).thenReturn(null);
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherSubmission(groupProblemId, submissionId, username));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (실패 - 그룹 문제 없음)")
+    public void getOtherSubmissionFailTest2(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.empty());
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherSubmission(groupProblemId, submissionId, username));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (실패 - 그룹 사용자 아님)")
+    public void getOtherSubmissionFailTest3(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        Submission submission1 = Submission.builder()
+                .id(submissionId)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.SUCCEEDED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(false);
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherSubmission(groupProblemId, submissionId, username));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (실패 - 성공 제출이 없음)")
+    public void getOtherSubmissionFailTest4(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        Submission submission1 = Submission.builder()
+                .id(submissionId)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.SUCCEEDED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(true);
+        when(submissionRepository.existsByUserAndGroupProblemAndStatus(user, groupProblem, SubmissionStatus.SUCCEEDED)).thenReturn(false);
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherSubmission(groupProblemId, submissionId, username));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NO_SUCCEEDED_SUBMISSION.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NO_SUCCEEDED_SUBMISSION.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NO_SUCCEEDED_SUBMISSION.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherSubmission 테스트 - (실패 - 제출 없음)")
+    public void getOtherSubmissionFailTest5(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+        Long submissionId = 1L;
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        Submission submission1 = Submission.builder()
+                .id(submissionId)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.SUCCEEDED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(true);
+        when(submissionRepository.existsByUserAndGroupProblemAndStatus(user, groupProblem, SubmissionStatus.SUCCEEDED)).thenReturn(true);
+        when(submissionRepository.findById(submissionId)).thenReturn(Optional.empty());
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherSubmission(groupProblemId, submissionId, username));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
 
 }

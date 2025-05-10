@@ -24,9 +24,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -931,6 +929,218 @@ public class SubmissionServiceTest {
         assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getCode(), exception.getErrorReasonHttpStatus().getCode());
         assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
         assertEquals(ErrorStatus._NOT_FOUND_SUBMISSION.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherAll 테스트 - (성공)")
+    public void getOtherAllSuccessTest(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        Submission submission1 = Submission.builder()
+                .id(1L)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.FAILED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        Submission submission2 = Submission.builder()
+                .id(2L)
+                .user(user)
+                .groupProblem(groupProblem)
+                .language("python")
+                .status(SubmissionStatus.SUCCEEDED)
+                .submissionTime(LocalDateTime.now())
+                .build();
+
+        PostPagingDto.PagingDto pagingDto = PostPagingDto.PagingDto.builder()
+                .page(0)
+                .size(10)
+                .sort("DESC")
+                .build();
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        Page<Submission> page = new PageImpl<>(List.of(submission2));
+
+        SubmissionResponseDto.OtherAllSubmissionDto dto = SubmissionResponseDto.OtherAllSubmissionDto.builder()
+                .id(submission1.getId())
+                .build();
+
+        SubmissionResponseDto.SearchOtherSubmissionDto expectedDto =
+                SubmissionResponseDto.SearchOtherSubmissionDto.builder()
+                        .totalElements(1)
+                        .otherSubmissionResDtos(List.of(dto)) // 필요한 구조에 맞게 수정
+                        .build();
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(true);
+        when(submissionRepository.findByGroupProblemIdAndStatus(groupProblemId, SubmissionStatus.SUCCEEDED,pageable)).thenReturn(page);
+
+        try (MockedStatic<SubmissionConverter> mocked = mockStatic(SubmissionConverter.class)) {
+            mocked.when(() -> SubmissionConverter.toSearchOtherSubmission(page)).thenReturn(expectedDto);
+
+            // then
+            SubmissionResponseDto.SearchOtherSubmissionDto result =
+                    submissionService.getOtherAll(groupProblemId, username, pagingDto);
+
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            assertEquals(expectedDto, result);
+        }
+
+    }
+
+    @Test
+    @DisplayName("getOtherAll 테스트 - (실패 - 사용자 없음)")
+    public void getOtherAllFailTest1(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+
+        PostPagingDto.PagingDto pagingDto = PostPagingDto.PagingDto.builder()
+                .page(0)
+                .size(10)
+                .sort("DESC")
+                .build();
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        when(userRepository.findByUsername(username)).thenReturn(null);
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherAll(groupProblemId, username, pagingDto));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._USERNAME_NOT_FOUND.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherAll 테스트 - (실패 - 그룹 문제 없음)")
+    public void getOtherAllFailTest2(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        PostPagingDto.PagingDto pagingDto = PostPagingDto.PagingDto.builder()
+                .page(0)
+                .size(10)
+                .sort("DESC")
+                .build();
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.empty());
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherAll(groupProblemId, username, pagingDto));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_FOUND_GROUPPROBLEM.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("getOtherAll 테스트 - (실패 - 그룹 사용자 아님)")
+    public void getOtherAllFailTest3(){
+
+        String username = "test";
+        Long groupProblemId = 1L;
+
+        User user = User.builder()
+                .id(1L)
+                .username(username)
+                .build();
+
+        Group group = Group.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase1 = TestCase.builder()
+                .id(1L)
+                .build();
+
+        TestCase testCase2 = TestCase.builder()
+                .id(2L)
+                .build();
+
+        Problem problem = Problem.builder()
+                .id(1L)
+                .testCases(List.of(testCase1, testCase2))
+                .build();
+
+        GroupProblem groupProblem = GroupProblem.builder()
+                .id(groupProblemId)
+                .group(group)
+                .deadline(now.plusDays(1))
+                .problem(problem)
+                .build();
+
+        PostPagingDto.PagingDto pagingDto = PostPagingDto.PagingDto.builder()
+                .page(0)
+                .size(10)
+                .sort("DESC")
+                .build();
+
+        Sort sort = Sort.by(Sort.Direction.fromString(pagingDto.getSort()),"submissionTime" );
+        Pageable pageable = PageRequest.of(pagingDto.getPage(), pagingDto.getSize(), sort);
+
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        when(groupProblemRepository.findById(groupProblemId)).thenReturn(Optional.of(groupProblem));
+        when(userGroupRepository.existsByGroupIdAndUserUsername(group.getId(), username)).thenReturn(false);
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> submissionService.getOtherAll(groupProblemId, username, pagingDto));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
 
     }
 

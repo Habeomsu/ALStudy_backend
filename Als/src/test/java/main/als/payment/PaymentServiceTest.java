@@ -22,6 +22,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -257,5 +258,274 @@ public class PaymentServiceTest {
 
     }
 
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 성공 )")
+    public void refundPaymentSuccessTest1(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("10000");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = User.builder()
+                .username(userName)
+                .build();
+
+        Group group = Group.builder()
+                .studyEndDate(now.minusDays(1))
+                .build();
+
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(paymentKey)
+                .charged(false)
+                .userDepositAmount(amount)
+                .build();
+
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("status", "CANCELED");
+        jsonResponse.put("message", "success");
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        try(MockedStatic<PaymentUtil> mockedStatic = mockStatic(PaymentUtil.class)) {
+            mockedStatic.when(()->PaymentUtil.processRefund(paymentKey,amount))
+                    .thenReturn(jsonResponse);
+
+            paymentService.refundPayment(userName,userGroupId);
+
+            verify(userGroupRepository).save(any(UserGroup.class));
+
+            assertEquals(BigDecimal.ZERO, usergroup.getUserDepositAmount());
+            assertTrue(usergroup.isRefunded());
+
+        }
+
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 성공 - 50% 환불 )")
+    public void refundPaymentSuccessTest2() {
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal originalAmount = new BigDecimal("10000");
+        BigDecimal expectedRefund = originalAmount.multiply(BigDecimal.valueOf(0.5));
+
+        User user = User.builder().username(userName).build();
+        Group group = Group.builder().studyEndDate(LocalDateTime.now().plusDays(5)).build(); // 아직 종료되지 않음
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(paymentKey)
+                .userDepositAmount(originalAmount)
+                .build();
+
+        JSONObject response = new JSONObject();
+        response.put("status", "PARTIAL_CANCELED");
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        try (MockedStatic<PaymentUtil> mockedStatic = mockStatic(PaymentUtil.class)) {
+            mockedStatic.when(() -> PaymentUtil.processRefund(paymentKey, expectedRefund)).thenReturn(response);
+
+            paymentService.refundPayment(userName, userGroupId);
+
+            assertEquals(BigDecimal.ZERO, usergroup.getUserDepositAmount());
+            assertTrue(usergroup.isRefunded());
+            verify(userGroupRepository).save(usergroup);
+        }
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 실패 - 유저그룹 없음 )")
+    public void refundPaymentFailTest1(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("10000");
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.empty());
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> paymentService.refundPayment(userName,userGroupId));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_FOUND_USERGROUP.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_FOUND_USERGROUP.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_FOUND_USERGROUP.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 실패 - 그룹 사용자가 아님 )")
+    public void refundPaymentFailTest2(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("10000");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = User.builder()
+                .username("test")
+                .build();
+
+        Group group = Group.builder()
+                .studyEndDate(now.minusDays(1))
+                .build();
+
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(paymentKey)
+                .charged(false)
+                .userDepositAmount(amount)
+                .build();
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> paymentService.refundPayment(userName,userGroupId));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NOT_IN_USERGROUP.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 실패 - 페이먼트키가 없음 )")
+    public void refundPaymentFailTest3(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("10000");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = User.builder()
+                .username(userName)
+                .build();
+
+        Group group = Group.builder()
+                .studyEndDate(now.minusDays(1))
+                .build();
+
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(null)
+                .charged(false)
+                .userDepositAmount(amount)
+                .build();
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> paymentService.refundPayment(userName,userGroupId));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._PAYMENT_KEY_NOT_FOUND.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._PAYMENT_KEY_NOT_FOUND.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._PAYMENT_KEY_NOT_FOUND.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 실패 - 예치금은 0원보다 작거나 같음 )")
+    public void refundPaymentFailTest4(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("0");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = User.builder()
+                .username(userName)
+                .build();
+
+        Group group = Group.builder()
+                .studyEndDate(now.minusDays(1))
+                .build();
+
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(paymentKey)
+                .charged(false)
+                .userDepositAmount(amount)
+                .build();
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        GeneralException exception = assertThrows(GeneralException.class, () -> paymentService.refundPayment(userName,userGroupId));
+
+        assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+        assertEquals(ErrorStatus._NO_AVAILABLE_DEPOSIT.getCode(), exception.getErrorReasonHttpStatus().getCode());
+        assertEquals(ErrorStatus._NO_AVAILABLE_DEPOSIT.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+        assertEquals(ErrorStatus._NO_AVAILABLE_DEPOSIT.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+    }
+
+    @Test
+    @DisplayName("refundPayment 테스트 - ( 실패 - 환불 실패 )")
+    public void refundPaymentFailTest5(){
+
+        Long userGroupId = 1L;
+        String userName = "userName";
+        String paymentKey = "paymentKey";
+        BigDecimal amount = new BigDecimal("10000");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        User user = User.builder()
+                .username(userName)
+                .build();
+
+        Group group = Group.builder()
+                .studyEndDate(now.minusDays(1))
+                .build();
+
+        UserGroup usergroup = UserGroup.builder()
+                .id(userGroupId)
+                .user(user)
+                .group(group)
+                .paymentKey(paymentKey)
+                .charged(false)
+                .userDepositAmount(amount)
+                .build();
+
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("status", "success");
+        jsonResponse.put("message", "success");
+
+        when(userGroupRepository.findById(userGroupId)).thenReturn(Optional.of(usergroup));
+
+        try(MockedStatic<PaymentUtil> mockedStatic = mockStatic(PaymentUtil.class)) {
+            mockedStatic.when(()->PaymentUtil.processRefund(paymentKey,amount))
+                    .thenReturn(jsonResponse);
+
+            GeneralException exception = assertThrows(GeneralException.class, () -> paymentService.refundPayment(userName,userGroupId));
+
+            assertFalse(exception.getErrorReasonHttpStatus().getIsSuccess());
+            assertEquals(ErrorStatus._REFUND_FAILED.getCode(), exception.getErrorReasonHttpStatus().getCode());
+            assertEquals(ErrorStatus._REFUND_FAILED.getMessage(), exception.getErrorReasonHttpStatus().getMessage());
+            assertEquals(ErrorStatus._REFUND_FAILED.getHttpStatus(), exception.getErrorReasonHttpStatus().getHttpStatus());
+
+        }
+
+    }
 
 }

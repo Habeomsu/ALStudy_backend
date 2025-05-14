@@ -70,7 +70,6 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new GeneralException(ErrorStatus._SUBMISSION_DEADLINE_EXCEEDED);// 기한 초과 예외
         }
 
-
             // 파일 검증
         if (file == null || file.isEmpty()) {
             throw new GeneralException(ErrorStatus._FILE_NOT_FOUND); // 파일이 없을 경우 예외 처리

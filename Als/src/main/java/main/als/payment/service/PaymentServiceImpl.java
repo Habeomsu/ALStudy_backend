@@ -88,7 +88,6 @@ public class PaymentServiceImpl implements PaymentService {
             throw new GeneralException(ErrorStatus._TOSS_SAVE_FAIL); // 예외 던지기
         }
 
-
     }
 
     @Override
@@ -134,8 +133,6 @@ public class PaymentServiceImpl implements PaymentService {
         userGroup.setRefunded(true); // 환급 후 charged 상태를 false로 설정
 
         userGroupRepository.save(userGroup);
-
-
 
     }
 }

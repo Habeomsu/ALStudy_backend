@@ -8,6 +8,7 @@ public class PaymentRequestDto {
 
 
     @Getter
+    @Builder
     public static class PaymentDto{
 
         @NotNull

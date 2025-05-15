@@ -1,4 +1,4 @@
-<img width="1264" alt="스크린샷 2025-05-15 오후 3 49 30" src="https://github.com/user-attachments/assets/7383bc79-aaf4-42b9-bd0a-54c78a4644d9" /># 프로젝트명 (예:Algorithm Study Backend(알쓰))
+# 프로젝트명 (예:Algorithm Study Backend(알쓰))
 
 ## 📝 소개
 이 프로젝트는 알고리즘 스터디를 위한 백엔드 서버입니다.  

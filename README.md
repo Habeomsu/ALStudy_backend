@@ -43,7 +43,10 @@
 - JWT를 사용하여 보안을 강화합니다.
 
 ## 테스트 커버리지
-<img width="1264" alt="스크린샷 2025-05-15 오후 3 49 30" src="https://github.com/user-attachments/assets/2455720d-439a-4e0f-a291-da4626089511" />  
+<img width="1264" alt="스크린샷 2025-05-15 오후 3 49 30" src="https://github.com/user-attachments/assets/2455720d-439a-4e0f-a291-da4626089511" />   
+
+- 관련 링크
+- https://github.com/Habeomsu/ALStudy_backend/tree/main/Als/src/test/java/main/als
 
 ### 📌 커버리지 미달 원인 정리
 

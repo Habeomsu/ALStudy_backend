@@ -1,4 +1,4 @@
-# 프로젝트명 (예:Algorithm Study Backend(알쓰))
+<img width="1264" alt="스크린샷 2025-05-15 오후 3 49 30" src="https://github.com/user-attachments/assets/7383bc79-aaf4-42b9-bd0a-54c78a4644d9" /># 프로젝트명 (예:Algorithm Study Backend(알쓰))
 
 ## 📝 소개
 이 프로젝트는 알고리즘 스터디를 위한 백엔드 서버입니다.  
@@ -42,9 +42,32 @@
 - 로그인한 사용자만 그룹 생성 및 가입, 문제 풀이 등의 기능을 사용할 수 있습니다.  
 - JWT를 사용하여 보안을 강화합니다.
 
+## 테스트 커버리지
+<img width="1264" alt="스크린샷 2025-05-15 오후 3 49 30" src="https://github.com/user-attachments/assets/2455720d-439a-4e0f-a291-da4626089511" />
+### 📌 커버리지 미달 원인 정리
+
+### 1. 컨버터 (Converter)
+
+- 각 도메인 패키지 내부의 `Converter` 클래스는 테스트 코드 미작성.
+- 대부분 단순 `Entity → DTO` 변환만 수행하므로 생략했으나, **Method / Line 커버리지 하락에 직접 영향**.
+
+### 2. DTO (Data Transfer Object)
+
+- `group`, `problem`, `user` 등 각 패키지 내 `DTO 클래스`는 테스트 대상에서 제외.
+- DTO는 테스트 대상은 아니지만, **Class 커버리지에 포함**되어 수치 하락에 영향을 줌.
+
+### 3. Util 클래스 (`payment.util.FlaskCommunicationUtil`)
+
+- 외부 HTTP 통신(Flask API)과 파일 입출력을 포함하고 있어 테스트 작성이 어려움.
+- 이로 인해 **payment 패키지 Line 커버리지 하락**.
+
+### 4. `config`, `valid`, `aws.s3` 패키지
+
+- 전반적인 설정, 인증 관련 클래스만 포함되어 있어 테스트 작성 제외.
+- 전혀 테스트되지 않아 `Class`, `Method`, `Line` 모두 0%.
+
 ## 🏗️ 프로젝트 구조
 ```
-
 📦 als  
  ┣ 📂 apiPayload                 # API 응답 및 오류 처리 관련  
  ┃ ┣ 📂 code                     # 코드 상태 및 오류 관련 클래스  
